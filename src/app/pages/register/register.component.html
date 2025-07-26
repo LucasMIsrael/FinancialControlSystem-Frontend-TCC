@@ -1,0 +1,19 @@
+<div class="register-container">
+    <form (ngSubmit)="register()" class="register-form">
+        <label>Nome</label>
+        <input type="text" [(ngModel)]="userData.name" name="name" required />
+
+        <label>Email</label>
+        <input type="email" [(ngModel)]="userData.email" name="email" required />
+
+        <label>Senha</label>
+        <input type="password" [(ngModel)]="userData.password" name="password" required />
+
+        <label>Confirme sua senha</label>
+        <input type="password" name="confirmPassword" required />
+
+        <button type="submit">Criar novo usuário</button>
+
+        <p class="login-link">Já possui uma conta? <a href="#">Entre aqui!</a></p>
+    </form>
+</div>
