@@ -1,0 +1,17 @@
+<div class="login-container">
+    <form (ngSubmit)="login()" class="login-form">
+        <h2 class="welcome-message">Bem-vindo!</h2>
+
+        <label>Email</label>
+        <input type="email" [(ngModel)]="loginData.email" name="email" required />
+
+        <label>Senha</label>
+        <input type="password" [(ngModel)]="loginData.password" name="password" required />
+
+        <button type="submit">Entrar</button>
+
+        <p class="register-link">
+            Não tem uma conta? <a routerLink="/register">Cadastre-se!</a>
+        </p>
+    </form>
+</div>
