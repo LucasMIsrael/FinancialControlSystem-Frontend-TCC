@@ -1,6 +1,7 @@
 /* src/styles.css */
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -10,5 +11,27 @@ html, body {
 
 body {
   font-family: 'Arial', sans-serif;
-  overflow: hidden; /* Opcional, se não quiser scroll */
+  overflow: hidden;
 }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* .custom-snackbar-error {
+  background-color: red !important;
+}
+
+.custom-snackbar-error .mat-simple-snackbar {
+  color: white !important;
+}
+
+.custom-snackbar-error .mat-simple-snackbar-action {
+  color: white !important;
+} */

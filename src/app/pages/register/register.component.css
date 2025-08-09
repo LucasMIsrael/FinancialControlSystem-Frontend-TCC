@@ -3,8 +3,10 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #F7F7F7; /* Light gray for the right side */
-  background-image: linear-gradient(to right, #98fb98 50%, #F7F7F7 50%); /* Green on the left, gray on the right */
+  background-color: #F7F7F7;
+  /* Light gray for the right side */
+  background-image: linear-gradient(to right, #98fb98 50%, #F7F7F7 50%);
+  /* Green on the left, gray on the right */
 }
 
 .register-container {
@@ -16,18 +18,21 @@
 }
 
 .register-form {
-  background-color: #2b2b2b; /* Dark background for the form */
+  background-color: #2b2b2b;
+  /* Dark background for the form */
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 400px; /* Adjust as needed */
+  max-width: 400px;
+  /* Adjust as needed */
 }
 
 .register-form label {
-  color: #ffffff; /* White text for labels */
+  color: #ffffff;
+  /* White text for labels */
   margin-bottom: 8px;
   font-weight: 500;
   font-size: 1.1em;
@@ -36,24 +41,28 @@
 .register-form input[type="text"],
 .register-form input[type="email"],
 .register-form input[type="password"] {
-  background-color: #ffffff; /* White background for inputs */
+  background-color: #ffffff;
+  /* White background for inputs */
   border: none;
   border-radius: 5px;
   padding: 12px 15px;
   margin-bottom: 20px;
   font-size: 1em;
-  color: #333; /* Dark text for input */
+  color: #333;
+  /* Dark text for input */
 }
 
 .register-form input[type="text"]:focus,
 .register-form input[type="email"]:focus,
 .register-form input[type="password"]:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #8CE2AA; /* Green outline on focus */
+  box-shadow: 0 0 0 2px #8CE2AA;
+  /* Green outline on focus */
 }
 
 .register-form button[type="submit"] {
-  background-color: #3cb371; /* Medium sea green for the button */
+  background-color: #3cb371;
+  /* Medium sea green for the button */
   color: #252425;
   border: none;
   border-radius: 5px;
@@ -66,7 +75,8 @@
 }
 
 .register-form button[type="submit"]:hover {
-  background-color: #2e8b57; /* Darker green on hover */
+  background-color: #2e8b57;
+  /* Darker green on hover */
 }
 
 .login-link {
@@ -77,11 +87,68 @@
 }
 
 .login-link a {
-  color: #3cb371; /* Green for the link */
+  color: #3cb371;
+  /* Green for the link */
   text-decoration: none;
   font-weight: bold;
 }
 
 .login-link a:hover {
   text-decoration: underline;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin-top: -15px;
+  margin-bottom: 15px;
+}
+
+.message-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  min-width: 250px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: fadein 0.5s;
+}
+
+.success-message {
+  background-color: #4caf50;
+}
+
+.error-message {
+  background-color: #f44336;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  margin-left: 15px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
