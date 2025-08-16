@@ -1,16 +1,39 @@
 <div class="register-container">
-    <form (ngSubmit)="register()" class="register-form">
+
+    <!--mensagem de sucesso ou erro-->
+    <div *ngIf="showMessage" [ngClass]="{'success-message': isSuccess, 'error-message': !isSuccess}"
+        class="message-box">
+        {{ messageText }}
+        <button (click)="closeMessage()" class="close-btn">&times;</button>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="register-form">
         <label>Nome</label>
-        <input type="text" [(ngModel)]="userData.name" name="name" required />
+        <input type="text" formControlName="name" />
+        <div *ngIf="submitted && registerForm.get('name')?.invalid" class="error">
+            Nome é obrigatório.
+        </div>
 
         <label>Email</label>
-        <input type="email" [(ngModel)]="userData.email" name="email" required />
+        <input type="email" formControlName="email" />
+        <div *ngIf="submitted && registerForm.get('email')?.invalid" class="error">
+            Email inválido.
+        </div>
 
         <label>Senha</label>
-        <input type="password" [(ngModel)]="userData.password" name="password" required />
+        <input type="password" formControlName="password" />
+        <div *ngIf="submitted && registerForm.get('password')?.invalid" class="error">
+            A senha deve ter pelo menos 11 caracteres, com letras e números.
+        </div>
 
         <label>Confirme sua senha</label>
-        <input type="password" name="confirmPassword" required />
+        <input type="password" formControlName="confirmPassword" />
+        <div *ngIf="submitted && registerForm.get('confirmPassword')?.invalid" class="error">
+            Confirmação de senha é obrigatória.
+        </div>
+        <div *ngIf="submitted && passwordMismatch" class="error">
+            As senhas não coincidem.
+        </div>
 
         <button type="submit">Criar novo usuário</button>
 
