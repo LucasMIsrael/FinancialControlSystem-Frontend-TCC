@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -6,24 +7,48 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginData = {
-    email: '',
-    password: ''
-  };
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  backendError = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) { }
+
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
 
   login(): void {
-    this.authService.loginUser(this.loginData).subscribe({
+    if (this.loginForm.invalid) {
+      //marca os campos como tocados para exibir as mensagens no html
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.authService.loginUser(this.loginForm.value).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token);
-        console.log('Login bem-sucedido!');
-        // redirecionar se quiser
+        sessionStorage.setItem('token', res.token);
+        // Redirecionar para outra página
       },
-      error: err => {
-        console.error('Erro no login:', err);
+      error: (err) => {
+        this.backendError = err?.error || 'Erro ao fazer login.';
+
+        setTimeout(() => {
+          this.backendError = '';
+        }, 5000);
       }
     });
+  }
+
+  get email() { return this.loginForm.get('email'); }
+  get password() { return this.loginForm.get('password'); }
+
+  closeError(): void {
+    this.backendError = '';
   }
 }

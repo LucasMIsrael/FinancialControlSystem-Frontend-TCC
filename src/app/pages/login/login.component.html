@@ -1,12 +1,28 @@
 <div class="login-container">
-    <form (ngSubmit)="login()" class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
         <h2 class="welcome-message">Bem-vindo!</h2>
 
         <label>Email</label>
-        <input type="email" [(ngModel)]="loginData.email" name="email" required />
+        <input type="email" formControlName="email" />
+        <div *ngIf="email?.touched && email?.invalid" class="error">
+            <span *ngIf="email?.errors?.['required']">Email é obrigatório.</span>
+            <span *ngIf="email?.errors?.['email']">Insira um email válido.</span>
+        </div>
 
         <label>Senha</label>
-        <input type="password" [(ngModel)]="loginData.password" name="password" required />
+        <input type="password" formControlName="password" />
+        <div *ngIf="password?.touched && password?.invalid" class="error">
+            Senha é obrigatória.
+        </div>
+
+        <p class="forgot-password" routerLink="/change-password">
+            Esqueci minha senha
+        </p>
+
+        <div *ngIf="backendError" class="message-box error-message">
+            {{ backendError }}
+            <button class="close-btn" (click)="closeError()">×</button>
+        </div>
 
         <button type="submit">Entrar</button>
 

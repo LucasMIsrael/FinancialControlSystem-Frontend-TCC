@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { LoginComponent } from './login.component';
-import { AuthService } from 'src/app/services/auth.service';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -14,13 +14,14 @@ describe('LoginComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports: [FormsModule],
+      imports: [ReactiveFormsModule, FormsModule],
       providers: [{ provide: AuthService, useValue: spy }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+
     fixture.detectChanges();
   });
 
@@ -29,27 +30,67 @@ describe('LoginComponent', () => {
   });
 
   it('deve chamar loginUser ao submeter o formulário', () => {
-    const tokenMock = 'mocked-token';
-    authServiceSpy.loginUser.and.returnValue(of({ token: tokenMock }));
+    const mockResponse = { token: 'fakeToken123' };
+    authServiceSpy.loginUser.and.returnValue(of(mockResponse));
 
-    component.loginData = { email: 'teste@email.com', password: '123456' };
+    component.loginForm.setValue({
+      email: 'usuario@teste.com',
+      password: '123456'
+    });
 
     component.login();
 
-    expect(authServiceSpy.loginUser).toHaveBeenCalledWith(component.loginData);
-    expect(localStorage.getItem('token')).toBe(tokenMock);
+    expect(authServiceSpy.loginUser).toHaveBeenCalledWith({
+      email: 'usuario@teste.com',
+      password: '123456'
+    });
   });
 
-  it('deve exibir erro ao falhar o login', () => {
-    const errorResponse = { message: 'Erro de login' };
-    spyOn(console, 'error');
+  it('deve exibir erro ao falhar o login', fakeAsync(() => {
+    const mockError = { error: 'Credenciais inválidas' };
+    authServiceSpy.loginUser.and.returnValue(throwError(() => mockError));
 
-    authServiceSpy.loginUser.and.returnValue(throwError(() => errorResponse));
+    component.loginForm.setValue({
+      email: 'usuario@teste.com',
+      password: 'senhaErrada'
+    });
 
-    component.loginData = { email: 'errado@email.com', password: 'senhaerrada' };
     component.login();
+    tick(); // processa a chamada do subscribe
 
-    expect(authServiceSpy.loginUser).toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith('Erro no login:', errorResponse);
+    expect(component.backendError).toBe('Credenciais inválidas');
+
+    tick(5000); // processa o setTimeout de limpeza
+    expect(component.backendError).toBe('');
+  }));
+
+  it('deve limpar a mensagem de erro após 5 segundos (teste isolado)', fakeAsync(() => {
+    const mockError = { error: 'Erro de teste' };
+    authServiceSpy.loginUser.and.returnValue(throwError(() => mockError));
+
+    component.loginForm.setValue({
+      email: 'usuario@teste.com',
+      password: '123456'
+    });
+
+    component.login();
+    tick(); // dispara subscribe
+    expect(component.backendError).toBe('Erro de teste');
+
+    tick(5000); // simula passagem de 5s
+    expect(component.backendError).toBe('');
+  }));
+
+  it('deve marcar todos os campos como tocados se o formulário for inválido', () => {
+    spyOn(component.loginForm, 'markAllAsTouched');
+    component.loginForm.setValue({ email: '', password: '' });
+    component.login();
+    expect(component.loginForm.markAllAsTouched).toHaveBeenCalled();
+  });
+
+  it('deve limpar backendError ao chamar closeError', () => {
+    component.backendError = 'Mensagem de erro';
+    component.closeError();
+    expect(component.backendError).toBe('');
   });
 });
