@@ -1,26 +1,33 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { LoginComponent } from './login.component';
+import { Router } from '@angular/router';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('AuthService', ['loginUser']);
+    const authSpy = jasmine.createSpyObj('AuthService', ['loginUser']);
+    const rSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [ReactiveFormsModule, FormsModule],
-      providers: [{ provide: AuthService, useValue: spy }]
+      providers: [
+        { provide: AuthService, useValue: authSpy },
+        { provide: Router, useValue: rSpy }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
     fixture.detectChanges();
   });
@@ -44,6 +51,20 @@ describe('LoginComponent', () => {
       email: 'usuario@teste.com',
       password: '123456'
     });
+  });
+
+  it('deve redirecionar para /environments após login bem-sucedido', () => {
+    const mockResponse = { token: 'fakeToken123' };
+    authServiceSpy.loginUser.and.returnValue(of(mockResponse));
+
+    component.loginForm.setValue({
+      email: 'usuario@teste.com',
+      password: '123456'
+    });
+
+    component.login();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/environments']);
   });
 
   it('deve exibir erro ao falhar o login', fakeAsync(() => {
