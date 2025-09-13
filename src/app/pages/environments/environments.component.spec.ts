@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnvironmentsComponent } from './environments.component';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data.model';
 import { FormsModule } from '@angular/forms';
 
