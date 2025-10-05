@@ -1,4 +1,9 @@
 <div class="environments-container">
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
     <!-- Sidebar -->
     <div class="sidebar" [class.expanded]="sidebarOpen">
         <!-- Logo principal -->
