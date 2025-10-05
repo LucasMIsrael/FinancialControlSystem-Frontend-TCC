@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   backendError = '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,10 +28,11 @@ export class LoginComponent implements OnInit {
 
   login(): void {
     if (this.loginForm.invalid) {
-      //marca os campos como tocados para exibir as mensagens no html
       this.loginForm.markAllAsTouched();
       return;
     }
+
+    this.isLoading = true;
 
     this.authService.loginUser(this.loginForm.value).subscribe({
       next: (res) => {
@@ -39,10 +41,10 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.backendError = err?.error || 'Erro ao fazer login.';
-
-        setTimeout(() => {
-          this.backendError = '';
-        }, 5000);
+        setTimeout(() => this.backendError = '', 5000);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
