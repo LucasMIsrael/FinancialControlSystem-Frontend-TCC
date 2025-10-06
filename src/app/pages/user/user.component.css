@@ -17,6 +17,7 @@
     z-index: 1000;
     transition: width 0.3s ease;
     overflow: visible;
+    z-index: 1050;
 }
 
 /* expandida */
@@ -152,16 +153,13 @@
     padding: 30px;
     transition: margin-left 0.3s ease;
     margin-left: 90px;
-    /* Offset inicial para a sidebar não expandida */
     margin-top: 10px;
     overflow-y: auto;
     max-height: calc(100vh - 20px);
 }
 
 .content.sidebar-open {
-    /* Ajuste para quando a sidebar estiver expandida. Não é estritamente necessário se 90px for o suficiente. */
-    margin-left: 220px;
-    /* Ajuste se quiser o conteúdo mais para a direita quando expandido */
+    margin-left: 90px;
 }
 
 .header {
@@ -181,11 +179,8 @@
 /* Mensagens de Erro/Sucesso */
 .message-box {
     position: fixed;
-    /* Essencial para fixar na tela */
     bottom: 20px;
-    /* Distância da parte inferior */
     right: 20px;
-    /* Distância da lateral direita */
     min-width: 250px;
     padding: 15px 20px;
     border-radius: 5px;
@@ -197,21 +192,15 @@
     align-items: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    /* Alto z-index para garantir que fique acima de tudo, inclusive modais */
     animation: fadein 0.5s;
     transition: opacity 0.3s, transform 0.3s;
 }
 
 .error-message {
     background-color: #f44336;
-    /* Fundo vermelho */
-    /* Remove a margem/display que causava conflito com as regras antigas */
-    /* margin: 0 !important;
-    display: flex !important;
-    align-items: center; */
 }
 
-.success-message{
+.success-message {
     background-color: #4caf50;
 }
 
@@ -238,28 +227,16 @@
     }
 }
 
-/* ---------------------------------------------------- */
-/* Estilos Específicos do User Component */
-/* ---------------------------------------------------- */
-
 .user-card {
     display: flex;
     background: white;
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-    /* MODIFICAÇÃO: Aumenta a largura e centraliza o card */
     max-width: 1000px;
-    /* Card mais largo */
     margin: 20px auto;
-    /* Centraliza horizontalmente e dá margem superior/inferior */
-
-    /* MODIFICAÇÃO: Adiciona a borda verde fina */
     border: 3px solid #4DDD7F;
-
     position: relative;
-    /* Adiciona espaço na parte inferior do card para o botão */
     padding-bottom: 80px;
 }
 
@@ -300,7 +277,6 @@ label {
     font-size: 16px;
     color: #2b2b2b;
     padding-right: 45px;
-    /* Espaço para o botão de edição */
 }
 
 .edit-btn {
@@ -317,25 +293,13 @@ label {
 .edit-btn img {
     width: 20px;
     height: 20px;
-    /* Ajuste para a cor do lápis no protótipo (se for vetorizado) */
 }
 
-/*.error-message {
-    color: #f44336;
-    font-size: 12px;
-    margin-top: -10px;
-    /* Ajusta a margem para ficar mais próximo do input */
-/* margin-bottom: 12px;
-    display: block; */
-/*}
-
-/* Avatar Circle */
 .avatar-circle {
     width: 220px;
     height: 220px;
     border-radius: 50%;
     background-color: #4DDD7F;
-    /* Cor de fundo verde clara do protótipo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -349,23 +313,10 @@ label {
     opacity: 0.7;
 }
 
-/* Botão Salvar Alterações */
-/* .save-button-container {
-    max-width: 800px;
-    margin: 20px auto 0;
-    text-align: right;
-    /* Alinha o botão à direita como no protótipo */
-/*padding-right: 20px;
-    /* Ajusta o padding para alinhar com o lado direito do card */
-
-
 .save-changes-btn {
     position: absolute;
     right: 40px;
-    /* Padding-right do card */
     bottom: 30px;
-    /* Espaço do fundo do card */
-
     background-color: #4DDD7F;
     color: white;
     font-size: 16px;
@@ -375,10 +326,86 @@ label {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.2s ease;
-    /* Remove a margem superior que existia no estilo anterior */
     margin-top: 0;
 }
 
 .save-changes-btn:hover {
     background-color: #3ac46e;
+}
+
+@media (max-width: 768px) {
+
+    .content {
+        padding: 20px;
+        margin-left: 70px;
+    }
+
+    .header h1 {
+        font-size: 36px;
+    }
+
+    .user-card {
+        flex-direction: column;
+        max-width: 95%;
+        padding: 30px 20px 100px 20px;
+        margin: 20px auto;
+    }
+
+    .form-column {
+        padding-right: 0;
+        order: 2;
+    }
+
+    .avatar-column {
+        margin-top: 0;
+        margin-bottom: 30px;
+        order: 1;
+        align-items: center;
+    }
+
+    .avatar-circle {
+        width: 150px;
+        height: 150px;
+        margin-left: 0;
+    }
+
+    .avatar-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .save-changes-btn {
+        right: 20px;
+        bottom: 20px;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .sidebar {
+        width: 0;
+    }
+
+    .content {
+        margin-left: 20px;
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+    }
+
+    .user-card {
+        padding: 20px 15px 80px 15px;
+        margin-top: 10px;
+    }
+
+    .message-box {
+        bottom: 10px;
+        right: 10px;
+        min-width: 150px;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
 }
