@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.backendError = err?.error || 'Erro ao fazer login.';
+        this.isLoading = false;
         setTimeout(() => this.backendError = '', 5000);
       },
       complete: () => {

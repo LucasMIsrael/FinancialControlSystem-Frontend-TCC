@@ -9,7 +9,7 @@ describe('AuthInterceptor', () => {
       ]
   }));
 
-  it('should be created', () => {
+  it('deve ser criado', () => {
     const interceptor: AuthInterceptor = TestBed.inject(AuthInterceptor);
     expect(interceptor).toBeTruthy();
   });

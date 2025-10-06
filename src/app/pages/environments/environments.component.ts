@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data.model';
+import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
 
@@ -15,22 +15,18 @@ export class EnvironmentsComponent implements OnInit {
   descriptionError = false;
 
   showModal = false;
-
   showDeleteModal = false;
   envToDelete: EnvironmentData | null = null;
 
   openMenuId: string | null = null;
 
-  // Objeto para binding com o formulário do modal
   newEnv: EnvironmentData = {
     name: '',
     description: '',
     type: EnvironmentTypeEnum.Personal
   };
 
-  // Controle do modal de edição
   showEditModal = false;
-  // Ambiente que será editado
   envToEdit: EnvironmentData = {
     id: '',
     name: '',
@@ -40,8 +36,9 @@ export class EnvironmentsComponent implements OnInit {
   nameEditError = false;
   descriptionEditError = false;
 
-  // Enum disponível no template (para options do select)
   environmentTypes = EnvironmentTypeEnum;
+
+  backendError = '';
 
   constructor(
     private environmentService: EnvironmentService,
@@ -52,17 +49,24 @@ export class EnvironmentsComponent implements OnInit {
     this.loadEnvironments();
   }
 
+  private showError(err: any, defaultMessage: string): void {
+    this.backendError = err?.error || defaultMessage;
+    setTimeout(() => {
+      this.backendError = '';
+    }, 5000);
+  }
+
   loadEnvironments(): void {
     this.environmentService.getAll().subscribe({
       next: (data) => {
-        // garante que cada ambiente tenha um id válido
         this.environments = (data || []).map(env => ({
           ...env,
-          id: env.id ?? '' // caso venha undefined, define como string vazia (não permitirá delete)
+          id: env.id ?? ''
         }));
       },
       error: (err) => {
         console.error('Erro ao buscar ambientes', err);
+        this.showError(err, 'Erro ao buscar ambientes.');
       }
     });
   }
@@ -71,18 +75,15 @@ export class EnvironmentsComponent implements OnInit {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
-  // Abrir modal
   newEnvironment(): void {
     this.resetForm();
     this.showModal = true;
   }
 
-  // Fechar modal
   closeModal(): void {
     this.showModal = false;
   }
 
-  // Resetar campos do formulário
   resetForm(): void {
     this.newEnv = {
       name: '',
@@ -91,14 +92,11 @@ export class EnvironmentsComponent implements OnInit {
     };
   }
 
-  // Criar ambiente
   createEnvironment(): void {
     this.nameError = !this.newEnv.name || this.newEnv.name.trim() === '';
     this.descriptionError = !this.newEnv.description || this.newEnv.description.trim() === '';
 
-    if (this.nameError || this.descriptionError) {
-      return;
-    }
+    if (this.nameError || this.descriptionError) return;
 
     this.environmentService.createEnvironment(this.newEnv).subscribe({
       next: () => {
@@ -107,6 +105,7 @@ export class EnvironmentsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao criar ambiente', err);
+        this.showError(err, 'Erro ao criar ambiente.');
       }
     });
   }
@@ -121,24 +120,16 @@ export class EnvironmentsComponent implements OnInit {
   }
 
   onEdit(env: EnvironmentData): void {
-    // Preenche o objeto com os dados existentes
-    this.envToEdit = {
-      id: env.id,
-      name: env.name,
-      description: env.description,
-      type: env.type
-    };
+    this.envToEdit = { ...env };
     this.nameEditError = false;
     this.descriptionEditError = false;
     this.showEditModal = true;
   }
 
-  // Fechar modal
   closeEditModal(): void {
     this.showEditModal = false;
   }
 
-  // Salvar alterações
   saveEdit(): void {
     this.nameEditError = !this.envToEdit.name || this.envToEdit.name.trim() === '';
     this.descriptionEditError = !this.envToEdit.description || this.envToEdit.description.trim() === '';
@@ -147,16 +138,13 @@ export class EnvironmentsComponent implements OnInit {
 
     this.environmentService.updateEnvironment(this.envToEdit).subscribe({
       next: () => {
-        // Atualiza a lista local sem recarregar
         const index = this.environments.findIndex(e => e.id === this.envToEdit.id);
-        if (index !== -1) {
-          this.environments[index] = { ...this.envToEdit };
-        }
+        if (index !== -1) this.environments[index] = { ...this.envToEdit };
         this.closeEditModal();
       },
       error: (err) => {
         console.error('Erro ao atualizar ambiente', err);
-        alert('Não foi possível atualizar o ambiente.');
+        this.showError(err, 'Erro ao atualizar ambiente.');
       }
     });
   }
@@ -181,12 +169,16 @@ export class EnvironmentsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao excluir ambiente', err);
-        alert('Não foi possível excluir o ambiente.');
+        this.showError(err, 'Erro ao excluir ambiente.');
       }
     });
   }
 
-  toggleOptions(id: string | undefined) {
+  toggleOptions(id: string | undefined): void {
     this.openMenuId = this.openMenuId === id ? null : id ?? null;
+  }
+
+  closeError(): void {
+    this.backendError = '';
   }
 }

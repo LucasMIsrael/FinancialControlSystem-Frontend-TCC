@@ -12,6 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { EnvironmentsComponent } from './pages/environments/environments.component';
 import { AuthInterceptor } from './auth.interceptor';
+import { UserComponent } from './pages/user/user.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AuthInterceptor } from './auth.interceptor';
     RegisterComponent,
     LoginComponent,
     ChangePasswordComponent,
-    EnvironmentsComponent
+    EnvironmentsComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

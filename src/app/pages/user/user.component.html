@@ -1,0 +1,77 @@
+<div class="user-container">
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+    <div *ngIf="successMessage" class="message-box success-message">
+        {{ successMessage }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <div class="menu-icons">
+            <div class="menu-item-wrapper" routerLink="/environments"> <img src="assets/environmentsIcon.png"
+                    alt="Ambientes" class="menu-icon" />
+                <span class="menu-text">Ambientes</span>
+            </div>
+            <div class="menu-item-wrapper active"> <img src="assets/userIcon.png" alt="Perfil" class="menu-icon" />
+                <span class="menu-text">Perfil</span>
+            </div>
+        </div>
+
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair" class="menu-icon" />
+            <span class="menu-text">Sair</span>
+        </div>
+    </div>
+
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Meu Perfil</h1>
+        </div>
+
+        <div class="user-card">
+            <div class="form-column">
+                <label for="name">Nome</label>
+                <div class="input-group">
+                    <input id="name" type="text" [(ngModel)]="userEdit.name" />
+                    <button class="edit-btn"><img src="assets/editIcon.png" alt="Editar" /></button>
+                </div>
+                <label for="email">Email</label>
+                <div class="input-group">
+                    <input id="email" type="email" [(ngModel)]="userEdit.email" />
+                    <button class="edit-btn"><img src="assets/editIcon.png" alt="Editar" /></button>
+                </div>
+                <label for="old-password">Senha Atual</label>
+                <div class="input-group">
+                    <input id="old-password" type="password" [(ngModel)]="userEdit.oldPassword"
+                        placeholder="Necessário se deseja alterar a senha" />
+                    <button class="edit-btn"><img src="assets/editIcon.png" alt="Editar" /></button>
+                </div>
+                <label for="new-password">Nova Senha</label>
+                <div class="input-group">
+                    <input id="new-password" type="password" [(ngModel)]="userEdit.newPassword"
+                        placeholder="Digite sua nova senha" />
+                    <button class="edit-btn"><img src="assets/editIcon.png" alt="Editar" /></button>
+                </div>
+            </div>
+
+            <div class="avatar-column">
+                <div class="avatar-circle">
+                    <img src="assets/userIcon.png" alt="Avatar do Usuário" class="avatar-icon" />
+                </div>
+            </div>
+            <button class="save-changes-btn" (click)="saveChanges()">
+                Salvar alterações
+            </button>
+        </div>
+    </div>
+</div>

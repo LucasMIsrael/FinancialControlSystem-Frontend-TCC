@@ -1,4 +1,9 @@
 <div class="environments-container">
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
     <!-- Sidebar -->
     <div class="sidebar" [class.expanded]="sidebarOpen">
         <!-- Logo principal -->
@@ -14,9 +19,9 @@
         <div class="menu-icons">
             <div class="menu-item-wrapper active">
                 <img src="assets/environmentsIcon.png" alt="Ambientes" class="menu-icon" />
-                <span class="menu-text">Meus Ambientes</span>
+                <span class="menu-text">Ambientes</span>
             </div>
-            <div class="menu-item-wrapper">
+            <div class="menu-item-wrapper" routerLink="/user">
                 <img src="assets/userIcon.png" alt="Perfil" class="menu-icon" />
                 <span class="menu-text">Perfil</span>
             </div>
