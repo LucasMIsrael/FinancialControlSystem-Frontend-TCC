@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data.model';
+import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
 

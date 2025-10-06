@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { EnvironmentService } from './environment.service';
-import { EnvironmentData, EnvironmentTypeEnum } from 'src/app/models/environment-data.model';
+import { EnvironmentData, EnvironmentTypeEnum } from 'src/app/models/environment-data';
 import { environment } from 'src/environments/environment';
 
 describe('EnvironmentService', () => {

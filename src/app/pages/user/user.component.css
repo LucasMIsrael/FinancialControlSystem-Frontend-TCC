@@ -1,0 +1,384 @@
+.user-container {
+    display: flex;
+    height: 100vh;
+    background: #f9f9f9;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.sidebar {
+    width: 70px;
+    background: #2b2b2b;
+    color: white;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: width 0.3s ease;
+    overflow: visible;
+}
+
+/* expandida */
+.sidebar.expanded {
+    width: 200px;
+}
+
+/* logo principal */
+.logo-section {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    cursor: pointer;
+}
+
+.logo-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.logo-text {
+    position: absolute;
+    top: 50%;
+    left: 82px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sidebar.expanded .logo-text {
+    opacity: 1;
+}
+
+.expand-icon {
+    position: absolute;
+    top: 70px;
+    left: 21px;
+    font-size: 18px;
+    color: rgb(164, 164, 164);
+}
+
+/* menu de icons */
+.menu-icons {
+    position: absolute;
+    margin-top: 120px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.menu-item-wrapper {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* Estilo para item ativo (Perfil) */
+.menu-item-wrapper.active .menu-icon {
+    background-color: rgb(164, 164, 164);
+    border-radius: 8px;
+}
+
+.menu-icon {
+    width: 35px;
+    height: 35px;
+    display: block;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.menu-text {
+    position: absolute;
+    top: 50%;
+    left: 55px;
+    transform: translateY(-50%);
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.expanded .menu-text {
+    opacity: 1;
+}
+
+.logout-wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 24px;
+    width: auto;
+    cursor: pointer;
+}
+
+.logout-wrapper .menu-icon {
+    width: 25px;
+    height: 25px;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.logout-wrapper .menu-text {
+    position: absolute;
+    top: 50%;
+    left: 55px;
+    transform: translateY(-50%);
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.expanded .logout-wrapper .menu-text {
+    opacity: 1;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    transition: margin-left 0.3s ease;
+    margin-left: 90px;
+    /* Offset inicial para a sidebar não expandida */
+    margin-top: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 20px);
+}
+
+.content.sidebar-open {
+    /* Ajuste para quando a sidebar estiver expandida. Não é estritamente necessário se 90px for o suficiente. */
+    margin-left: 220px;
+    /* Ajuste se quiser o conteúdo mais para a direita quando expandido */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 45px;
+    font-weight: 400;
+    color: #2b2b2b;
+    margin-top: 25px;
+}
+
+/* Mensagens de Erro/Sucesso */
+.message-box {
+    position: fixed;
+    /* Essencial para fixar na tela */
+    bottom: 20px;
+    /* Distância da parte inferior */
+    right: 20px;
+    /* Distância da lateral direita */
+    min-width: 250px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    /* Alto z-index para garantir que fique acima de tudo, inclusive modais */
+    animation: fadein 0.5s;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.error-message {
+    background-color: #f44336;
+    /* Fundo vermelho */
+    /* Remove a margem/display que causava conflito com as regras antigas */
+    /* margin: 0 !important;
+    display: flex !important;
+    align-items: center; */
+}
+
+.success-message{
+    background-color: #4caf50;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    margin-left: 15px;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------------------------------------------------- */
+/* Estilos Específicos do User Component */
+/* ---------------------------------------------------- */
+
+.user-card {
+    display: flex;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    /* MODIFICAÇÃO: Aumenta a largura e centraliza o card */
+    max-width: 1000px;
+    /* Card mais largo */
+    margin: 20px auto;
+    /* Centraliza horizontalmente e dá margem superior/inferior */
+
+    /* MODIFICAÇÃO: Adiciona a borda verde fina */
+    border: 3px solid #4DDD7F;
+
+    position: relative;
+    /* Adiciona espaço na parte inferior do card para o botão */
+    padding-bottom: 80px;
+}
+
+.form-column {
+    flex: 2;
+    padding-right: 40px;
+}
+
+.avatar-column {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 43px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #8A8A8A;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.input-group input {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #2b2b2b;
+    padding-right: 45px;
+    /* Espaço para o botão de edição */
+}
+
+.edit-btn {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.edit-btn img {
+    width: 20px;
+    height: 20px;
+    /* Ajuste para a cor do lápis no protótipo (se for vetorizado) */
+}
+
+/*.error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: -10px;
+    /* Ajusta a margem para ficar mais próximo do input */
+/* margin-bottom: 12px;
+    display: block; */
+/*}
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background-color: #4DDD7F;
+    /* Cor de fundo verde clara do protótipo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-left: 0px;
+}
+
+.avatar-icon {
+    width: 180px;
+    height: 180px;
+    opacity: 0.7;
+}
+
+/* Botão Salvar Alterações */
+/* .save-button-container {
+    max-width: 800px;
+    margin: 20px auto 0;
+    text-align: right;
+    /* Alinha o botão à direita como no protótipo */
+/*padding-right: 20px;
+    /* Ajusta o padding para alinhar com o lado direito do card */
+
+
+.save-changes-btn {
+    position: absolute;
+    right: 40px;
+    /* Padding-right do card */
+    bottom: 30px;
+    /* Espaço do fundo do card */
+
+    background-color: #4DDD7F;
+    color: white;
+    font-size: 16px;
+    padding: 13px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    /* Remove a margem superior que existia no estilo anterior */
+    margin-top: 0;
+}
+
+.save-changes-btn:hover {
+    background-color: #3ac46e;
+}
