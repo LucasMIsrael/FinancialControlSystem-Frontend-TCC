@@ -93,10 +93,31 @@ export class EnvironmentsComponent implements OnInit {
   }
 
   createEnvironment(): void {
-    this.nameError = !this.newEnv.name || this.newEnv.name.trim() === '';
-    this.descriptionError = !this.newEnv.description || this.newEnv.description.trim() === '';
+    this.nameError = false;
+    this.descriptionError = false;
 
-    if (this.nameError || this.descriptionError) return;
+    if (!this.newEnv.name || this.newEnv.name.trim() === '') {
+      this.nameError = true;
+    }
+    if (!this.newEnv.description || this.newEnv.description.trim() === '') {
+      this.descriptionError = true;
+    }
+
+    if (this.nameError || this.descriptionError) {
+      const messages: string[] = [];
+
+      if (this.nameError) {
+        messages.push('O nome do ambiente é obrigatório');
+        this.showError(null, 'O nome do ambiente é obrigatório');
+        return;
+      }
+
+      if (this.descriptionError) {
+        messages.push('A descrição é obrigatória');
+        this.showError(null, 'A descrição é obrigatória');
+        return;
+      }
+    }
 
     this.environmentService.createEnvironment(this.newEnv).subscribe({
       next: () => {
@@ -105,7 +126,7 @@ export class EnvironmentsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao criar ambiente', err);
-        this.showError(err, 'Erro ao criar ambiente.');
+        this.showError(err, 'Erro ao criar ambiente');
       }
     });
   }
@@ -131,10 +152,31 @@ export class EnvironmentsComponent implements OnInit {
   }
 
   saveEdit(): void {
-    this.nameEditError = !this.envToEdit.name || this.envToEdit.name.trim() === '';
-    this.descriptionEditError = !this.envToEdit.description || this.envToEdit.description.trim() === '';
+    this.nameEditError = false;
+    this.descriptionEditError = false;
 
-    if (this.nameEditError || this.descriptionEditError) return;
+    if (!this.envToEdit.name || this.envToEdit.name.trim() === '') {
+      this.nameEditError = true;
+    }
+    if (!this.envToEdit.description || this.envToEdit.description.trim() === '') {
+      this.descriptionEditError = true;
+    }
+
+    if (this.nameEditError || this.descriptionEditError) {
+      const messages: string[] = [];
+
+      if (this.nameEditError) {
+        messages.push('O nome do ambiente é obrigatório');
+        this.showError(null, 'O nome do ambiente é obrigatório');
+        return;
+      }
+
+      if (this.descriptionEditError) {
+        messages.push('A descrição é obrigatória');
+        this.showError(null, 'A descrição é obrigatória');
+        return;
+      }
+    }
 
     this.environmentService.updateEnvironment(this.envToEdit).subscribe({
       next: () => {
@@ -144,7 +186,7 @@ export class EnvironmentsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao atualizar ambiente', err);
-        this.showError(err, 'Erro ao atualizar ambiente.');
+        this.showError(err, 'Erro ao atualizar ambiente');
       }
     });
   }

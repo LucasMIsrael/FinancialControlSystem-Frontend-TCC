@@ -77,9 +77,6 @@
             <div class="modal-body">
                 <label>Nome do Ambiente</label>
                 <input type="text" [(ngModel)]="newEnv.name" />
-                <div *ngIf="nameError" class="error-message">
-                    O nome do ambiente é obrigatório.
-                </div>
 
                 <label>Tipo</label>
                 <select [(ngModel)]="newEnv.type">
@@ -90,9 +87,6 @@
 
                 <label>Descrição</label>
                 <textarea [(ngModel)]="newEnv.description"></textarea>
-                <div *ngIf="descriptionError" class="error-message">
-                    A descrição é obrigatória.
-                </div>
             </div>
 
             <div class="modal-footer">
@@ -127,15 +121,9 @@
             <div class="modal-body">
                 <label>Nome do Ambiente</label>
                 <input type="text" [(ngModel)]="envToEdit.name" />
-                <div *ngIf="nameEditError" class="error-message">
-                    O nome do ambiente é obrigatório.
-                </div>
 
                 <label>Descrição</label>
                 <textarea [(ngModel)]="envToEdit.description"></textarea>
-                <div *ngIf="descriptionEditError" class="error-message">
-                    A descrição é obrigatória.
-                </div>
             </div>
             <div class="modal-footer">
                 <button class="create-btn" (click)="saveEdit()">Salvar Alterações</button>

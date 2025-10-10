@@ -10,30 +10,26 @@ import { UserDataForUpdateDto } from 'src/app/models/user-info-for-update';
 describe('UserComponent', () => {
   let component: UserComponent;
   let fixture: ComponentFixture<UserComponent>;
-  // Mock do UserService e Router
   let userServiceMock: any;
   let routerMock: any;
 
   const mockUser: UserInfoForViewDto = {
     id: '1',
-    name: 'Mestre',
-    email: 'mestre@qametrik.com'
+    name: 'Usuário Teste',
+    email: 'usuario@teste.com'
   };
 
   beforeEach(async () => {
-    // Configura o Mock do UserService
     userServiceMock = {
       getUser: jasmine.createSpy('getUser').and.returnValue(of(mockUser)),
       updateUser: jasmine.createSpy('updateUser').and.returnValue(of({}))
     };
 
-    // Configura o Mock do Router
     routerMock = {
       navigate: jasmine.createSpy('navigate')
     };
 
     await TestBed.configureTestingModule({
-      // ADICIONADO: Importação do FormsModule para resolver o erro 'ngModel'
       imports: [FormsModule],
       declarations: [UserComponent],
       providers: [
@@ -44,26 +40,28 @@ describe('UserComponent', () => {
 
     fixture = TestBed.createComponent(UserComponent);
     component = fixture.componentInstance;
-    // Dispara o ngOnInit, que chama loadUser()
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    // Garante que o estado não vaze entre os testes
+    TestBed.resetTestingModule();
   });
 
   it('deve criar o componente', () => {
     expect(component).toBeTruthy();
   });
 
-  // --- Testes de Inicialização e Carregamento ---
-
   it('deve carregar os dados do usuário no ngOnInit e preencher userEdit', () => {
-    // CORREÇÃO: Chamamos loadUser() novamente para garantir o estado inicial 
-    // e evitar vazamento de estado de outros blocos (describe/beforeEach)
+    // Reinicia o mock e o componente
+    userServiceMock.getUser.and.returnValue(of(mockUser));
     component.loadUser();
     fixture.detectChanges();
 
     expect(userServiceMock.getUser).toHaveBeenCalled();
-    expect(component.currentUser.name).toBe('Mestre');
+    expect(component.currentUser.name).toBe('Usuário Teste');
     expect(component.userEdit.id).toBe('1');
-    expect(component.userEdit.email).toBe('mestre@qametrik.com');
+    expect(component.userEdit.email).toBe('usuario@teste.com');
   });
 
   it('deve exibir erro se falhar ao carregar usuário e limpar após 5s', fakeAsync(() => {
@@ -74,12 +72,10 @@ describe('UserComponent', () => {
     expect(component.backendError).toBe('');
   }));
 
-  // --- Testes de Validação de Formulário ---
-
   describe('validações de formulário', () => {
     beforeEach(() => {
-      component.userEdit.name = 'Mestre';
-      component.userEdit.email = 'teste@teste.com';
+      component.userEdit.name = 'Usuário Teste';
+      component.userEdit.email = 'usuario@teste.com';
       component.userEdit.newPassword = '';
       component.userEdit.oldPassword = '';
       component.backendError = '';
@@ -116,7 +112,7 @@ describe('UserComponent', () => {
     });
 
     it('deve passar se apenas nome e email forem alterados (senhas vazias)', () => {
-      component.userEdit.name = 'Novo Nome';
+      component.userEdit.name = 'Novo Usuário';
       component.userEdit.email = 'novo@teste.com';
       const valid = component.validateForm();
       expect(valid).toBeTrue();
@@ -132,20 +128,16 @@ describe('UserComponent', () => {
     });
   });
 
-  // --- Testes de Salvar Alterações ---
-
   describe('salvar alterações', () => {
     beforeEach(() => {
       component.userEdit = {
         id: '1',
-        name: 'Novo Nome',
+        name: 'Novo Usuário',
         email: 'novo@teste.com',
         newPassword: '',
         oldPassword: ''
       };
-      // Força a validação a passar para testar o serviço
       spyOn(component, 'validateForm').and.returnValue(true);
-      // Reinicia o mock do updateUser
       userServiceMock.updateUser.and.returnValue(of({}));
     });
 
@@ -154,13 +146,12 @@ describe('UserComponent', () => {
 
       const expectedDto: UserDataForUpdateDto = {
         id: '1',
-        name: 'Novo Nome',
+        name: 'Novo Usuário',
         email: 'novo@teste.com',
       };
 
       expect(userServiceMock.updateUser).toHaveBeenCalledWith(expectedDto);
-      // Verifica se a currentUser foi atualizada
-      expect(component.currentUser.name).toBe('Novo Nome');
+      expect(component.currentUser.name).toBe('Novo Usuário');
       expect(component.currentUser.email).toBe('novo@teste.com');
     });
 
@@ -171,14 +162,13 @@ describe('UserComponent', () => {
 
       const expectedDto: UserDataForUpdateDto = {
         id: '1',
-        name: 'Novo Nome',
+        name: 'Novo Usuário',
         email: 'novo@teste.com',
         newPassword: 'nova',
         oldPassword: 'antiga'
       };
 
       expect(userServiceMock.updateUser).toHaveBeenCalledWith(expectedDto);
-      // Verifica se os campos de senha foram limpos
       expect(component.userEdit.newPassword).toBe('');
       expect(component.userEdit.oldPassword).toBe('');
     });
@@ -191,12 +181,7 @@ describe('UserComponent', () => {
 
     it('deve mostrar mensagem de sucesso e limpar após 5s', fakeAsync(() => {
       component.saveChanges();
-
-      // Assert imediatamente
       expect(component.successMessage).toBe('Atualizado com sucesso!');
-      expect(component.backendError).toBe('');
-
-      // Avança o tempo
       tick(5000);
       expect(component.successMessage).toBe('');
     }));
@@ -205,20 +190,12 @@ describe('UserComponent', () => {
       userServiceMock.updateUser.and.returnValue(
         throwError(() => ({ error: 'Falha de Autenticação' }))
       );
-
       component.saveChanges();
-
-      // Assert imediatamente
       expect(component.backendError).toBe('Falha de Autenticação');
-      expect(component.successMessage).toBe('');
-
-      // Avança o tempo
       tick(5000);
       expect(component.backendError).toBe('');
     }));
   });
-
-  // --- Testes de Funções Auxiliares ---
 
   describe('funções auxiliares', () => {
     it('deve alternar a sidebar', () => {
