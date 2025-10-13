@@ -31,4 +31,8 @@ export class EnvironmentService {
   setEnvironment(id: string): Observable<any> {
     return this.http.post(`${this.apiUrl}envManipulation/set/environment?environmentId=${id}`, {});
   }
+
+  updateAchievedGoals(): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}goalsManipulation/update/achieved/goals`, null);
+  }
 }
