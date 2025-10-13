@@ -13,6 +13,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { EnvironmentsComponent } from './pages/environments/environments.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { UserComponent } from './pages/user/user.component';
+import { GoalsComponent } from './pages/goals/goals.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { UserComponent } from './pages/user/user.component';
     LoginComponent,
     ChangePasswordComponent,
     EnvironmentsComponent,
-    UserComponent
+    UserComponent,
+    GoalsComponent
   ],
   imports: [
     BrowserModule,
