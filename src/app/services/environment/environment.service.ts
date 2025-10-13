@@ -27,4 +27,8 @@ export class EnvironmentService {
   updateEnvironment(env: EnvironmentData): Observable<any> {
     return this.http.put(`${this.apiUrl}envManipulation/update/environment`, env);
   }
+
+  setEnvironment(id: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}envManipulation/set/environment?environmentId=${id}`, {});
+  }
 }

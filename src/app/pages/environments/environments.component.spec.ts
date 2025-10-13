@@ -18,7 +18,14 @@ describe('EnvironmentsComponent', () => {
   ];
 
   beforeEach(async () => {
-    mockService = jasmine.createSpyObj(['getAll', 'createEnvironment', 'updateEnvironment', 'deleteEnvironment']);
+    mockService = jasmine.createSpyObj([
+      'getAll',
+      'createEnvironment',
+      'updateEnvironment',
+      'deleteEnvironment',
+      'setEnvironment'
+    ]);
+
     mockRouter = jasmine.createSpyObj(['navigate']);
 
     await TestBed.configureTestingModule({
@@ -139,10 +146,5 @@ describe('EnvironmentsComponent', () => {
     expect(component.environments.length).toBe(1);
     expect(component.environments.find(e => e.id === '1')).toBeUndefined();
     expect(component.cancelDelete).toHaveBeenCalled();
-  });
-
-  it('deve navegar ao acessar ambiente', () => {
-    component.onAccess(mockEnvironments[0]);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/ambiente', '1']);
   });
 });

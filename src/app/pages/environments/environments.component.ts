@@ -13,7 +13,7 @@ export class EnvironmentsComponent implements OnInit {
   sidebarOpen = false;
   nameError = false;
   descriptionError = false;
-
+  isLoading = false;
   showModal = false;
   showDeleteModal = false;
   envToDelete: EnvironmentData | null = null;
@@ -137,7 +137,36 @@ export class EnvironmentsComponent implements OnInit {
   }
 
   onAccess(env: EnvironmentData): void {
-    this.router.navigate(['/ambiente', env.id]);
+    this.openMenuId = null;
+
+    if (!env.id) {
+      this.showError(null, 'ID do ambiente não encontrado para acesso.');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.environmentService.setEnvironment(env.id).subscribe({
+      next: () => {
+        if (env?.id) {
+          sessionStorage.setItem('env', env.id);
+        } else {
+          this.showError(null, 'ID de ambiente vazio');
+          return;
+        }
+        setTimeout(() => {
+          this.router.navigate(['/goals']);
+        }, 400);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Erro ao acessar/definir ambiente', err);
+        this.showError(err, 'Erro ao definir ambiente ativo. Tente novamente.');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   onEdit(env: EnvironmentData): void {
