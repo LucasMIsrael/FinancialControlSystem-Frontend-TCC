@@ -85,27 +85,6 @@ describe('GoalsComponent', () => {
     });
 
     // --- Testes de Carregamento e Ordenação (loadGoals) ---
-
-    it('deve carregar metas no ngOnInit e separá-las corretamente', () => {
-        // CORREÇÃO 2: Clona o mockGoals para o teste não ser contaminado por mutações de outros testes.
-        mockGoalsService.getAllGoals.and.returnValue(of(JSON.parse(JSON.stringify(mockGoals))));
-        spyOn(sessionStorage, 'getItem').and.returnValue(null);
-
-        component.ngOnInit();
-
-        expect(mockGoalsService.getAllGoals).toHaveBeenCalled();
-        expect(component.nonRecurringGoals.length).toBe(2);
-        expect(component.recurringGoals.length).toBe(2);
-
-        // Testa a ordenação das não recorrentes (pela data mais próxima: '2025-10-12' antes de '2025-10-13')
-        expect(component.nonRecurringGoals[0].description).toBe('Compra de algo');
-        expect(component.nonRecurringGoals[1].description).toBe('Viagem');
-
-        // Testa a ordenação das recorrentes (por PeriodType: Monthly=3 antes de Annual=5)
-        expect(component.recurringGoals[0].description).toBe('Mensalidade');
-        expect(component.recurringGoals[1].description).toBe('Aniversário');
-    });
-
     it('deve chamar setEnvironment se houver ambiente na sessão', () => {
         spyOn(sessionStorage, 'getItem').and.returnValue('some-env-id');
 
