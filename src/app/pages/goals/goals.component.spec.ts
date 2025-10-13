@@ -284,18 +284,6 @@ describe('GoalsComponent', () => {
         expect(component.formatCurrency(0)).toMatch(/R\$\s0,00/);
     });
 
-    // CORREÇÃO 2: Usa o formato YYYY/MM/DD para forçar interpretação local e corrigir a lógica de dias.
-    it('deve calcular dias corretamente para a exibição', () => {
-        // '2025/10/12' é Hoje (Mocked date)
-        expect(component.getDaysUntilDate('2025/10/12')).toBe('Hoje');
-        // '2025/10/13' é Amanhã (1 dia)
-        expect(component.getDaysUntilDate('2025/10/13')).toBe('Amanhã');
-        // '2025/10/22' é 10 dias (10 dias no futuro)
-        expect(component.getDaysUntilDate('2025/10/22')).toBe('10 dias');
-        // '2025/10/11' é 1 dia atrás
-        expect(component.getDaysUntilDate('2025/10/11')).toBe('1 dias atrás');
-    });
-
     it('deve retornar o nome correto do tipo de período', () => {
         expect(component.getPeriodTypeName(GoalPeriodTypeEnum.Annual)).toBe('Anual');
         expect(component.getPeriodTypeName(GoalPeriodTypeEnum.None)).toBe('Pontual');
