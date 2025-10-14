@@ -1,0 +1,137 @@
+<div class="environments-container">
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <!-- Logo principal -->
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <!-- Menu de ícones -->
+        <div class="menu-icons">
+            <div class="menu-item-wrapper active">
+                <img src="assets/environmentsIcon.png" alt="Ambientes" class="menu-icon" />
+                <span class="menu-text">Ambientes</span>
+            </div>
+            <div class="menu-item-wrapper" routerLink="/user">
+                <img src="assets/userIcon.png" alt="Perfil" class="menu-icon" />
+                <span class="menu-text">Perfil</span>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair" class="menu-icon" />
+            <span class="menu-text">Sair</span>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Meus Ambientes</h1>
+            <button class="new-env-btn" (click)="newEnvironment()">
+                + Novo ambiente
+            </button>
+        </div>
+
+        <div class="cards-container">
+            <div class="env-card" *ngFor="let env of environments">
+                <span class="options-btn" (click)="toggleOptions(env.id)">⋮</span>
+
+                <div class="env-card-header">
+                    {{ env.name }}
+                </div>
+                <div class="env-card-body">
+                    <strong>Descrição:</strong> {{ env.description }}
+                </div>
+
+                <div class="options-menu" *ngIf="openMenuId === env.id">
+                    <div class="menu-item" (click)="onAccess(env)">Acessar</div>
+                    <div class="menu-item" (click)="onEdit(env)">Editar</div>
+                    <div class="menu-item" (click)="onDelete(env)">Excluir</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal de criação -->
+    <div class="modal-backdrop" *ngIf="showModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Novo Ambiente</h2>
+                <span class="modal-close" (click)="closeModal()">×</span>
+            </div>
+
+            <!-- Corpo -->
+            <div class="modal-body">
+                <label>Nome do Ambiente</label>
+                <input type="text" [(ngModel)]="newEnv.name" />
+
+                <label>Tipo</label>
+                <select [(ngModel)]="newEnv.type">
+                    <option [ngValue]="environmentTypes.Personal">Pessoal</option>
+                    <option [ngValue]="environmentTypes.Family">Familiar</option>
+                    <option [ngValue]="environmentTypes.Business">Empresarial</option>
+                </select>
+
+                <label>Descrição</label>
+                <textarea [(ngModel)]="newEnv.description"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button class="create-btn" (click)="createEnvironment()">Criar Ambiente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação de exclusão -->
+    <div class="delete-modal-backdrop" *ngIf="showDeleteModal">
+        <div class="delete-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Tem certeza que deseja excluir este ambiente?</h2>
+                <span class="modal-close" (click)="cancelDelete()">×</span>
+            </div>
+            <div class="modal-body">
+                A ação irá excluir de forma permanente os dados e metas vinculados ao mesmo.
+            </div>
+            <div class="modal-footer">
+                <button class="btn-confirm" (click)="confirmDelete()">Sim</button>
+                <button class="btn-cancel" (click)="cancelDelete()">Não</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de Edição -->
+    <div class="modal-backdrop" *ngIf="showEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Ambiente</h2>
+                <span class="modal-close" (click)="closeEditModal()">×</span>
+            </div>
+            <div class="modal-body">
+                <label>Nome do Ambiente</label>
+                <input type="text" [(ngModel)]="envToEdit.name" />
+
+                <label>Descrição</label>
+                <textarea [(ngModel)]="envToEdit.description"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="create-btn" (click)="saveEdit()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+    <div class="loading-overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p class="loading-text">Carregando...</p>
+    </div>
+</div>

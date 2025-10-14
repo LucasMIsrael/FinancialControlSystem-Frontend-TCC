@@ -24,10 +24,17 @@
             <button class="close-btn" (click)="closeError()">×</button>
         </div>
 
-        <button type="submit">Entrar</button>
+        <button type="submit" [disabled]="isLoading">
+            {{ isLoading ? 'Entrando...' : 'Entrar' }}
+        </button>
 
         <p class="register-link">
             Não tem uma conta? <a routerLink="/register">Cadastre-se!</a>
         </p>
     </form>
+
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Entrando...</p>
+    </div>
 </div>

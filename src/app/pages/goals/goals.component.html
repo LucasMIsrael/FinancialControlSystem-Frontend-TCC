@@ -1,0 +1,246 @@
+<div class="goals-container">
+    <!-- Mensagens de Erro/Sucesso -->
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+    <div *ngIf="successMessage" class="message-box success-message">
+        {{ successMessage }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <!-- Logo principal -->
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <!-- Menu de ícones -->
+        <div class="menu-icons">
+            <div class="menu-item-wrapper active">
+                <img src="assets/goalsIcon.png" alt="Metas" class="menu-icon" />
+                <span class="menu-text">Metas</span>
+            </div>
+            <div class="menu-item-wrapper" routerLink="/transactions">
+                <img src="assets/moneyIcon.png" alt="Transações" class="menu-icon" />
+                <span class="menu-text">Transações</span>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair do Ambiente" class="menu-icon" />
+            <span class="menu-text">Voltar</span>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal: Lista de Metas -->
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Minhas Metas</h1>
+            <button class="new-goal-btn" (click)="newGoal()">
+                + Nova Meta
+            </button>
+        </div>
+
+        <div class="goals-list-container">
+            <div *ngIf="nonRecurringGoals.length === 0 && recurringGoals.length === 0" class="no-goals">
+                <p>Você ainda não possui metas cadastradas neste ambiente.</p>
+                <p>Clique em "+ Nova Meta" para começar a planejar!</p>
+            </div>
+
+            <!-- Metas Não Recorrentes -->
+            <div *ngIf="nonRecurringGoals.length > 0" class="goals-section">
+                <h2 class="section-title">Metas Pontuais ({{ nonRecurringGoals.length }})</h2>
+                <div class="goals-grid">
+                    <div class="goal-item compact" *ngFor="let goal of nonRecurringGoals">
+                        <div class="goal-header">
+                            <h3>Meta #{{ goal.goalNumber }}</h3>
+                            <div class="goal-actions">
+                                <span class="options-btn" (click)="toggleOptions(goal.id, $event)">⋮</span>
+                            </div>
+                        </div>
+
+                        <div class="goal-info">
+                            <p class="description">{{ goal.description }}</p>
+                            <div class="goal-details">
+                                <span class="value">{{ formatCurrency(goal.value) }}</span>
+                                <span class="due-date">{{ getDaysUntilDate(goal.singleDate ?? null) }}</span>
+                            </div>
+                            <div class="date">Vencimento: {{ formatDate(goal.singleDate ?? null) }}</div>
+                            <!-- Badge de Status -->
+                            <div class="status-badge" [class.completed]="goal.status === true"
+                                [class.not-completed]="goal.status === false">
+                                {{ getStatusText(goal.status) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metas Recorrentes -->
+            <div *ngIf="recurringGoals.length > 0" class="goals-section">
+                <h2 class="section-title">Metas Recorrentes ({{ recurringGoals.length }})</h2>
+                <div class="goals-grid">
+                    <div class="goal-item compact" *ngFor="let goal of recurringGoals">
+                        <div class="goal-header">
+                            <h3>Meta #{{ goal.goalNumber }}</h3>
+                            <div class="goal-actions">
+                                <span class="options-btn" (click)="toggleOptions(goal.id, $event)">⋮</span>
+                            </div>
+                        </div>
+
+                        <div class="goal-info">
+                            <p class="description">{{ goal.description }}</p>
+                            <div class="goal-details">
+                                <span class="value">{{ formatCurrency(goal.value) }}</span>
+                                <span class="period">{{ getPeriodTypeName(goal.periodType) }}</span>
+                            </div>
+                            <div class="date" *ngIf="goal.startDate">Início: {{ formatDate(goal.startDate) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu de opções (agora posicionado de forma fixa) -->
+    <div class="options-menu" *ngIf="openMenuId !== null" [style.top.px]="menuPosition.top"
+        [style.left.px]="menuPosition.left">
+        <div class="menu-item" (click)="onEdit(getGoalById(openMenuId))">Editar</div>
+        <div class="menu-item delete" (click)="onDelete(getGoalById(openMenuId))">Excluir</div>
+    </div>
+
+    <!-- Modal de Criação -->
+    <div class="modal-backdrop" *ngIf="showCreateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Cadastrar Nova Meta</h2>
+            </div>
+            <button class="modal-close" (click)="closeCreateModal()">×</button>
+
+            <div class="modal-body">
+                <div class="form-column full-width">
+                    <label for="description">Descrição da Meta</label>
+                    <div class="input-group">
+                        <textarea id="description" [(ngModel)]="newGoalForm.description"
+                            placeholder="Descreva sua meta..."></textarea>
+                    </div>
+
+                    <label for="value">Valor da Meta (R$)</label>
+                    <div class="input-group">
+                        <input id="value" type="number" [(ngModel)]="newGoalForm.value" placeholder="0.00" min="0"
+                            step="0.01" />
+                    </div>
+
+                    <label for="category">Tipo de Período</label>
+                    <div class="input-group">
+                        <select id="category" [(ngModel)]="newGoalForm.periodType">
+                            <option [ngValue]="null">Selecione o tipo de meta</option>
+                            <option [ngValue]="periodTypes.None">Não Recorrente (Pontual)</option>
+                            <option [ngValue]="periodTypes.Daily">Diária</option>
+                            <option [ngValue]="periodTypes.Weekly">Semanal</option>
+                            <option [ngValue]="periodTypes.Monthly">Mensal</option>
+                            <option [ngValue]="periodTypes.Semestral">Semestral</option>
+                            <option [ngValue]="periodTypes.Annual">Anual</option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="newGoalForm.periodType === periodTypes.None">
+                        <label for="singleDate">Data de Vencimento</label>
+                        <div class="input-group">
+                            <input id="singleDate" type="date" [(ngModel)]="newGoalForm.singleDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="save-goal-btn" (click)="saveGoal()">
+                    Cadastrar Meta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal-backdrop" *ngIf="showEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Meta #{{ envToEdit.goalNumber }}</h2>
+            </div>
+            <button class="modal-close" (click)="closeEditModal()">×</button>
+
+            <div class="modal-body">
+                <div class="form-column full-width">
+                    <label for="editDescription">Descrição da Meta</label>
+                    <div class="input-group">
+                        <textarea id="editDescription" [(ngModel)]="envToEdit.description"
+                            placeholder="Descreva sua meta..."></textarea>
+                    </div>
+
+                    <label for="editValue">Valor da Meta (R$)</label>
+                    <div class="input-group">
+                        <input id="editValue" type="number" [(ngModel)]="envToEdit.value" placeholder="0.00" min="0"
+                            step="0.01" />
+                    </div>
+
+                    <label for="editPeriodType">Tipo de Período</label>
+                    <div class="input-group">
+                        <select id="editPeriodType" [(ngModel)]="envToEdit.periodType">
+                            <option [ngValue]="null">Selecione o tipo de meta</option>
+                            <option [ngValue]="periodTypes.None">Não Recorrente (Pontual)</option>
+                            <option [ngValue]="periodTypes.Daily">Diária</option>
+                            <option [ngValue]="periodTypes.Weekly">Semanal</option>
+                            <option [ngValue]="periodTypes.Monthly">Mensal</option>
+                            <option [ngValue]="periodTypes.Semestral">Semestral</option>
+                            <option [ngValue]="periodTypes.Annual">Anual</option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="envToEdit.periodType === periodTypes.None">
+                        <label for="editSingleDate">Data de Vencimento</label>
+                        <div class="input-group">
+                            <input id="editSingleDate" type="date" [(ngModel)]="envToEdit.singleDate" />
+                        </div>
+                    </div>
+
+                    <div *ngIf="envToEdit.periodType !== periodTypes.None && envToEdit.periodType !== null">
+                        <label for="editStartDate">Data de Início</label>
+                        <div class="input-group">
+                            <input id="editStartDate" type="date" [(ngModel)]="envToEdit.startDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="save-goal-btn" (click)="saveEdit()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="delete-modal-backdrop" *ngIf="showDeleteModal">
+        <div class="delete-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Excluir Meta</h2>
+            </div>
+            <button class="modal-close" (click)="cancelDelete()">×</button>
+
+            <div class="modal-body">
+                Tem certeza que deseja excluir a meta <strong>#{{ goalToDelete?.goalNumber }}</strong>? Esta ação é
+                permanente.
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="cancelDelete()">Não</button>
+                <button class="btn-confirm" (click)="confirmDelete()">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>

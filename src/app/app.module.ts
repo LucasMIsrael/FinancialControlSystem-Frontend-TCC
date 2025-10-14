@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,13 +10,22 @@ import { LoginComponent } from './pages/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { EnvironmentsComponent } from './pages/environments/environments.component';
+import { AuthInterceptor } from './auth.interceptor';
+import { UserComponent } from './pages/user/user.component';
+import { GoalsComponent } from './pages/goals/goals.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    EnvironmentsComponent,
+    UserComponent,
+    GoalsComponent,
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +36,9 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
     BrowserAnimationsModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
