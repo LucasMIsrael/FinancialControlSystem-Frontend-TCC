@@ -14,6 +14,7 @@ import { EnvironmentsComponent } from './pages/environments/environments.compone
 import { AuthInterceptor } from './auth.interceptor';
 import { UserComponent } from './pages/user/user.component';
 import { GoalsComponent } from './pages/goals/goals.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { GoalsComponent } from './pages/goals/goals.component';
     ChangePasswordComponent,
     EnvironmentsComponent,
     UserComponent,
-    GoalsComponent
+    GoalsComponent,
+    TransactionsComponent
   ],
   imports: [
     BrowserModule,

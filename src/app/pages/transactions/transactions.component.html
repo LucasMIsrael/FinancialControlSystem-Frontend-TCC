@@ -1,0 +1,269 @@
+<div class="transactions-container">
+    <!-- Mensagens de Erro/Sucesso -->
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+    <div *ngIf="successMessage" class="message-box success-message">
+        {{ successMessage }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <!-- Logo principal -->
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <!-- Menu de ícones -->
+        <div class="menu-icons">
+            <div class="menu-item-wrapper" (click)="navigateToGoals()">
+                <img src="assets/goalsIcon.png" alt="Metas" class="menu-icon" />
+                <span class="menu-text">Metas</span>
+            </div>
+            <div class="menu-item-wrapper active">
+                <img src="assets/moneyIcon.png" alt="Transações" class="menu-icon" />
+                <span class="menu-text">Transações</span>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair do Ambiente" class="menu-icon" />
+            <span class="menu-text">Voltar</span>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal: Lista de Transações -->
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Minhas Transações</h1>
+            <div class="header-buttons">
+                <button class="new-transaction-btn planned" (click)="newTransaction('planned')">
+                    + Transação Planejada
+                </button>
+                <button class="new-transaction-btn unplanned" (click)="newTransaction('unplanned')">
+                    + Transação Inesperada
+                </button>
+            </div>
+        </div>
+
+        <div class="transactions-list-container">
+            <div *ngIf="plannedTransactions.length === 0 && unplannedTransactions.length === 0" class="no-transactions">
+                <p>Você ainda não possui transações cadastradas neste ambiente.</p>
+                <p>Clique em "+ Transação Planejada" ou "+ Transação Inesperada" para começar!</p>
+            </div>
+
+            <!-- Transações Planejadas -->
+            <div *ngIf="plannedTransactions.length > 0" class="transactions-section">
+                <h2 class="section-title">Transações Planejadas ({{ plannedTransactions.length }})</h2>
+                <div class="transactions-grid">
+                    <div class="transaction-item compact" *ngFor="let transaction of plannedTransactions">
+                        <div class="transaction-header">
+                            <h3>Transação #{{ transaction.transactionNumber }}</h3>
+                            <div class="transaction-actions">
+                                <span class="options-btn" (click)="toggleOptions(transaction.id, $event)">⋮</span>
+                            </div>
+                        </div>
+
+                        <div class="transaction-info">
+                            <p class="description">{{ transaction.description }}</p>
+                            <div class="transaction-details">
+                                <span class="amount" [class.income]="transaction.type === transactionTypes.Income"
+                                    [class.expense]="transaction.type === transactionTypes.Expense">
+                                    {{ formatCurrency(transaction.amount) }}
+                                </span>
+                                <span class="type-badge" [class.income]="transaction.type === transactionTypes.Income"
+                                    [class.expense]="transaction.type === transactionTypes.Expense">
+                                    {{ getTransactionTypeName(transaction.type) }}
+                                </span>
+                            </div>
+                            <div class="recurrence">{{ getRecurrenceTypeName(transaction.recurrenceType) }}</div>
+                            <div class="date">Data: {{ formatDate(transaction.transactionDate) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transações Inesperadas -->
+            <div *ngIf="unplannedTransactions.length > 0" class="transactions-section">
+                <h2 class="section-title">Transações Inesperadas ({{ unplannedTransactions.length }})</h2>
+                <div class="transactions-grid">
+                    <div class="transaction-item compact" *ngFor="let transaction of unplannedTransactions">
+                        <div class="transaction-header">
+                            <h3>Transação #{{ transaction.transactionNumber }}</h3>
+                            <div class="transaction-actions">
+                                <span class="options-btn" (click)="toggleOptions(transaction.id, $event)">⋮</span>
+                            </div>
+                        </div>
+
+                        <div class="transaction-info">
+                            <p class="description">{{ transaction.description }}</p>
+                            <div class="transaction-details">
+                                <span class="amount" [class.income]="transaction.type === transactionTypes.Income"
+                                    [class.expense]="transaction.type === transactionTypes.Expense">
+                                    {{ formatCurrency(transaction.amount) }}
+                                </span>
+                                <span class="type-badge" [class.income]="transaction.type === transactionTypes.Income"
+                                    [class.expense]="transaction.type === transactionTypes.Expense">
+                                    {{ getTransactionTypeName(transaction.type) }}
+                                </span>
+                            </div>
+                            <div class="date">Data: {{ formatDate(transaction.transactionDate) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu de opções -->
+    <div class="options-menu" *ngIf="openMenuId !== null" [style.top.px]="menuPosition.top"
+        [style.left.px]="menuPosition.left">
+        <div class="menu-item" (click)="onEdit(getTransactionById(openMenuId))">Editar</div>
+        <div class="menu-item delete" (click)="onDelete(getTransactionById(openMenuId))">Excluir</div>
+    </div>
+
+    <!-- Modal de Criação -->
+    <div class="modal-backdrop" *ngIf="showCreateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ isPlannedTransaction ? 'Nova Transação Planejada' : 'Nova Transação Inesperada'
+                    }}</h2>
+            </div>
+            <button class="modal-close" (click)="closeCreateModal()">×</button>
+
+            <div class="modal-body">
+                <div class="form-column full-width">
+                    <label for="description">Descrição da Transação</label>
+                    <div class="input-group">
+                        <textarea id="description" [(ngModel)]="newTransactionForm.description"
+                            placeholder="Descreva sua transação..."></textarea>
+                    </div>
+
+                    <label for="amount">Valor (R$)</label>
+                    <div class="input-group">
+                        <input id="amount" type="number" [(ngModel)]="newTransactionForm.amount" placeholder="0.00"
+                            min="0" step="0.01" />
+                    </div>
+
+                    <label for="type">Tipo de Transação</label>
+                    <div class="input-group">
+                        <select id="type" [(ngModel)]="newTransactionForm.type">
+                            <option [ngValue]="null">Selecione o tipo</option>
+                            <option [ngValue]="transactionTypes.Income">Receita</option>
+                            <option [ngValue]="transactionTypes.Expense">Despesa</option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="isPlannedTransaction">
+                        <label for="recurrenceType">Tipo de Recorrência</label>
+                        <div class="input-group">
+                            <select id="recurrenceType" [(ngModel)]="newTransactionForm.recurrenceType">
+                                <option [ngValue]="recurrenceTypes.None">Pontual</option>
+                                <option [ngValue]="recurrenceTypes.Daily">Diária</option>
+                                <option [ngValue]="recurrenceTypes.Weekly">Semanal</option>
+                                <option [ngValue]="recurrenceTypes.Monthly">Mensal</option>
+                                <option [ngValue]="recurrenceTypes.Semestral">Semestral</option>
+                                <option [ngValue]="recurrenceTypes.Annual">Anual</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="transactionDate">Data da Transação</label>
+                    <div class="input-group">
+                        <input id="transactionDate" type="date" [(ngModel)]="newTransactionForm.transactionDate" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="save-transaction-btn" (click)="saveTransaction()">
+                    Cadastrar Transação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal-backdrop" *ngIf="showEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Transação #{{ transactionToEdit.transactionNumber }}</h2>
+            </div>
+            <button class="modal-close" (click)="closeEditModal()">×</button>
+
+            <div class="modal-body">
+                <div class="form-column full-width">
+                    <label for="editDescription">Descrição da Transação</label>
+                    <div class="input-group">
+                        <textarea id="editDescription" [(ngModel)]="transactionToEdit.description"
+                            placeholder="Descreva sua transação..."></textarea>
+                    </div>
+
+                    <label for="editAmount">Valor (R$)</label>
+                    <div class="input-group">
+                        <input id="editAmount" type="number" [(ngModel)]="transactionToEdit.amount" placeholder="0.00"
+                            min="0" step="0.01" />
+                    </div>
+
+                    <label for="editType">Tipo de Transação</label>
+                    <div class="input-group">
+                        <select id="editType" [(ngModel)]="transactionToEdit.type">
+                            <option [ngValue]="transactionTypes.Income">Receita</option>
+                            <option [ngValue]="transactionTypes.Expense">Despesa</option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="transactionToEdit.recurrenceType !== recurrenceTypes.None">
+                        <label for="editRecurrenceType">Tipo de Recorrência</label>
+                        <div class="input-group">
+                            <select id="editRecurrenceType" [(ngModel)]="transactionToEdit.recurrenceType">
+                                <option [ngValue]="recurrenceTypes.None">Pontual</option>
+                                <option [ngValue]="recurrenceTypes.Daily">Diária</option>
+                                <option [ngValue]="recurrenceTypes.Weekly">Semanal</option>
+                                <option [ngValue]="recurrenceTypes.Monthly">Mensal</option>
+                                <option [ngValue]="recurrenceTypes.Semestral">Semestral</option>
+                                <option [ngValue]="recurrenceTypes.Annual">Anual</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="editTransactionDate">Data da Transação</label>
+                    <div class="input-group">
+                        <input id="editTransactionDate" type="date" [(ngModel)]="transactionToEdit.transactionDate" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="save-transaction-btn" (click)="saveEdit()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="delete-modal-backdrop" *ngIf="showDeleteModal">
+        <div class="delete-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Excluir Transação</h2>
+            </div>
+            <button class="modal-close" (click)="cancelDelete()">×</button>
+
+            <div class="modal-body">
+                Tem certeza que deseja excluir a transação <strong>#{{ transactionToDelete?.transactionNumber
+                    }}</strong>? Esta ação é
+                permanente.
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="cancelDelete()">Não</button>
+                <button class="btn-confirm" (click)="confirmDelete()">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
