@@ -6,6 +6,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { EnvironmentsComponent } from './pages/environments/environments.component';
 import { UserComponent } from './pages/user/user.component';
 import { GoalsComponent } from './pages/goals/goals.component';
+import { TransactionsComponent } from './pages/transactions/transactions.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'environments', component: EnvironmentsComponent },
   { path: 'user', component: UserComponent },
-  { path: 'goals', component: GoalsComponent }
+  { path: 'goals', component: GoalsComponent },
+  { path: 'transactions', component: TransactionsComponent },
 ];
 
 @NgModule({
