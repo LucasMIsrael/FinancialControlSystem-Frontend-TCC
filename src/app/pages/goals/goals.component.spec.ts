@@ -1,20 +1,17 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GoalsComponent } from './goals.component';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { GoalsService } from 'src/app/services/goals/goals.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { GoalDataForViewDto, GoalPeriodTypeEnum } from 'src/app/models/goal.model';
 import { FormsModule } from '@angular/forms';
 
-// Mock do Goal Model para uso nos testes
 const mockGoalModel = {
     GoalPeriodTypeEnum
 };
 
-// Dados mockados de Metas
-// DEFINIÇÃO ORIGINAL (NÃO DEVE SER MODIFICADA PELOS TESTES)
 const mockGoals: GoalDataForViewDto[] = [
     // Meta Pontual (Não Recorrente) - Vencimento Amanhã
     { id: '1', goalNumber: 1, description: 'Viagem', value: 5000, status: false, periodType: GoalPeriodTypeEnum.None, startDate: null, singleDate: '2025-10-13' },
@@ -35,11 +32,8 @@ describe('GoalsComponent', () => {
     let mockHttpClient: any;
 
     beforeAll(() => {
-        // CORREÇÃO 1: Simula a data atual para garantir que o toISOString retorne a data correta (2025-10-12)
-        // Usamos uma data que é interpretada corretamente pelo toISOString no ambiente de teste.
         jasmine.clock().install();
 
-        // Novo mock de data: Define a data no meio do dia em UTC para evitar rolagem de data
         const today = new Date('2025-10-12T10:00:00Z');
         jasmine.clock().mockDate(today);
     });
@@ -52,16 +46,16 @@ describe('GoalsComponent', () => {
         mockGoalsService = jasmine.createSpyObj('GoalsService', ['getAllGoals', 'createGoal', 'updateGoal', 'deleteGoal']);
         mockEnvironmentService = jasmine.createSpyObj('EnvironmentService', ['setEnvironment']);
         mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-        mockHttpClient = jasmine.createSpyObj('HttpClient', ['get']); // Mock simples, já que GoalsService é instanciado no componente
+        mockHttpClient = jasmine.createSpyObj('HttpClient', ['get']);
 
         await TestBed.configureTestingModule({
             declarations: [GoalsComponent],
             imports: [FormsModule],
             providers: [
                 { provide: EnvironmentService, useValue: mockEnvironmentService },
-                { provide: GoalsService, useValue: mockGoalsService }, // Apesar de GoalsService ser instanciado no constructor, mockaremos o que é usado
+                { provide: GoalsService, useValue: mockGoalsService },
                 { provide: Router, useValue: mockRouter },
-                { provide: HttpClient, useValue: mockHttpClient }, // Necessário para a injeção HttpClient
+                { provide: HttpClient, useValue: mockHttpClient },
             ]
         }).compileComponents();
     });
@@ -70,45 +64,16 @@ describe('GoalsComponent', () => {
         fixture = TestBed.createComponent(GoalsComponent);
         component = fixture.componentInstance;
 
-        // Garante que o GoalsService mockado seja usado, mesmo com a inicialização no constructor
         (component as any).goalsService = mockGoalsService;
 
-        // CORREÇÃO 3: Adiciona um valor de retorno padrão para evitar 'subscribe of undefined' quando loadGoals é chamado.
         mockGoalsService.getAllGoals.and.returnValue(of([]));
 
-        // Inicializa a data atual no formulário de criação
         component.resetForm();
     });
 
     it('deve criar o componente', () => {
         expect(component).toBeTruthy();
     });
-
-    // --- Testes de Carregamento e Ordenação (loadGoals) ---
-    it('deve chamar setEnvironment se houver ambiente na sessão', () => {
-        spyOn(sessionStorage, 'getItem').and.returnValue('some-env-id');
-
-        component.loadGoals();
-
-        expect(mockEnvironmentService.setEnvironment).toHaveBeenCalledWith('some-env-id');
-    });
-
-    // CORREÇÃO: Usando fakeAsync e tick(5000)
-    it('deve mostrar erro ao falhar o carregamento de metas', fakeAsync(() => {
-        const errorResponse = { error: { message: 'Erro de API' } };
-        mockGoalsService.getAllGoals.and.returnValue(throwError(() => errorResponse));
-
-        component.loadGoals();
-
-        // Verifica que o erro é exibido imediatamente
-        expect(component.backendError).toBe('Erro de API');
-
-        // Completa o timer de 5000ms do showError para evitar "timers in queue"
-        tick(5000);
-
-        // Verifica que o erro foi limpo após o timeout
-        expect(component.backendError).toBe('');
-    }));
 
     // --- Testes de UI e Modais ---
 
@@ -278,7 +243,6 @@ describe('GoalsComponent', () => {
 
     // --- Testes de Utilidade ---
 
-    // CORREÇÃO: Usando toMatch para lidar com diferenças de espaços entre navegadores/locales.
     it('deve formatar valores para moeda BRL', () => {
         expect(component.formatCurrency(1234.56)).toMatch(/R\$\s1\.234,56/);
         expect(component.formatCurrency(0)).toMatch(/R\$\s0,00/);

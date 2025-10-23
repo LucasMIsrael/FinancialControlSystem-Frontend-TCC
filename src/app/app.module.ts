@@ -15,6 +15,13 @@ import { AuthInterceptor } from './auth.interceptor';
 import { UserComponent } from './pages/user/user.component';
 import { GoalsComponent } from './pages/goals/goals.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+
+import { ChartModule } from 'primeng/chart';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -25,7 +32,8 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
     EnvironmentsComponent,
     UserComponent,
     GoalsComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +42,12 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    ChartModule,
+    CalendarModule,
+    DropdownModule,
+    SelectButtonModule,
+    ProgressSpinnerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

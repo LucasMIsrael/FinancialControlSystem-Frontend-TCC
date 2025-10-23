@@ -1,0 +1,267 @@
+<div class="dashboard-container">
+    <!-- Mensagens de Erro/Sucesso -->
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+    <div *ngIf="successMessage" class="message-box success-message">
+        {{ successMessage }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <!-- Logo principal -->
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <!-- Menu de ícones -->
+        <div class="menu-icons">
+            <div class="menu-item-wrapper active">
+                <img src="assets/dashIcon.png" alt="Dashboard" class="menu-icon" />
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item-wrapper" (click)="navigateTo('/goals')">
+                <img src="assets/goalsIcon.png" alt="Metas" class="menu-icon" />
+                <span class="menu-text">Metas</span>
+            </div>
+            <div class="menu-item-wrapper" (click)="navigateTo('/transactions')">
+                <img src="assets/moneyIcon.png" alt="Transações" class="menu-icon" />
+                <span class="menu-text">Transações</span>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair do Ambiente" class="menu-icon" />
+            <span class="menu-text">Voltar</span>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <button class="refresh-btn" (click)="loadAllData()" [disabled]="loading">
+                <i class="pi pi-refresh" [class.pi-spin]="loading"></i>
+                Atualizar
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="loading-container">
+            <p-progressSpinner></p-progressSpinner>
+        </div>
+
+        <div *ngIf="!loading" class="dashboard-content">
+            <!-- Resumo Financeiro -->
+            <div class="summary-section">
+                <div class="summary-cards">
+                    <div class="summary-card balance" *ngIf="financialSummary">
+                        <!-- <div class="card-icon">
+                            <i class="pi pi-wallet"></i>
+                        </div> -->
+                        <div class="card-content">
+                            <h3>Saldo Atual</h3>
+
+                            <div class="balance-edit-container">
+                                <!-- Exibição normal com ícone de edição -->
+                                <div *ngIf="!isEditingBalance" class="balance-display">
+                                    <p class="value" (click)="enableBalanceEdit()">
+                                        {{ formatCurrency(financialSummary.currentBalance) }}
+                                    </p>
+                                    <img src="assets/editIcon.png" alt="Editar" class="edit-icon"
+                                        (click)="enableBalanceEdit()" />
+                                </div>
+
+                                <!-- Modo de edição -->
+                                <div *ngIf="isEditingBalance" class="balance-editing">
+                                    <input type="number" step="0.01" [(ngModel)]="editedBalance" class="balance-input"
+                                        (keyup.enter)="saveEditedBalance()" />
+
+                                    <button class="confirm-btn" (click)="saveEditedBalance()">✔</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card profit" *ngIf="financialSummary">
+                        <!-- <div class="card-icon">
+                            <i class="pi pi-arrow-up"></i>
+                        </div> -->
+                        <div class="card-content">
+                            <h3>Total de Receitas</h3>
+                            <p class="value">{{ formatCurrency(financialSummary.totalProfit) }}</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card expense" *ngIf="financialSummary">
+                        <!-- <div class="card-icon">
+                            <i class="pi pi-arrow-down"></i>
+                        </div> -->
+                        <div class="card-content">
+                            <h3>Total de Despesas</h3>
+                            <p class="value">{{ formatCurrency(financialSummary.totalExpense) }}</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-card margin" *ngIf="financialSummary">
+                        <!-- <div class="card-icon">
+                            <i class="pi pi-percentage"></i>
+                        </div> -->
+                        <div class="card-content">
+                            <h3>Margem de Lucro</h3>
+                            <p class="value">{{ financialSummary.profitMargin }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nível de Controle Financeiro -->
+                <div class="control-level-card" *ngIf="financialSummary">
+                    <div class="trophy-icon" [style.color]="getFinancialLevelColor(financialSummary.level)">
+                        <img src="assets/trophyIcon.png" alt="Troféu" class="trophy-img" />
+                    </div>
+
+                    <h3>Nível de Controle Financeiro</h3>
+
+                    <div class="level-indicator">
+                        <span class="level-badge"
+                            [style.background-color]="getFinancialLevelColor(financialSummary.level)">
+                            {{ getFinancialLevelText(financialSummary.level) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos e Análises -->
+            <div class="charts-section">
+                <!-- Evolução do Saldo -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Evolução do Saldo</h3>
+                        <div
+                            class="chart-filters flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center">
+                            <!-- Data Inicial -->
+                            <input type="date" [(ngModel)]="balanceFilter.startDate" (change)="onBalanceFilterChange()"
+                                title="Data Inicial" class="date-input" />
+                            <!-- Data Final -->
+                            <input type="date" [(ngModel)]="balanceFilter.endDate" (change)="onBalanceFilterChange()"
+                                title="Data Final" class="date-input" />
+                        </div>
+                    </div>
+                    <p-chart type="line" [data]="balanceChartData" [options]="balanceChartOptions"></p-chart>
+                </div>
+
+                <!-- Metas Não Recorrentes -->
+                <div class="chart-container donut-narrow">
+                    <h3>Metas Pontuais - Alcançadas X Pendentes</h3>
+                    <p-chart type="doughnut" [data]="goalsDonutData" [options]="goalsDonutOptions"></p-chart>
+                </div>
+
+                <!-- Distribuição de Conquistas -->
+                <div class="chart-container bar-wide">
+                    <h3>Períodos com Metas Recorrentes mais alcançadas</h3>
+                    <p-chart type="bar" [data]="distributionChartData" [options]="distributionChartOptions"></p-chart>
+                </div>
+
+                <!-- Projeção de Saldo -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Projeção de Saldo (estimativa)</h3>
+                        <div class="chart-filters">
+                            <p-dropdown [(ngModel)]="projectionFilter.periodValue" [options]="[
+                                         {label: '3', value: 3},
+                                         {label: '6', value: 6},
+                                         {label: '9', value: 9},
+                                         {label: '12', value: 12}
+                                       ]" *ngIf="!projectionFilter.isYear" placeholder="Meses"
+                                (onChange)="onProjectionFilterChange()">
+                            </p-dropdown>
+                            <p-dropdown [(ngModel)]="projectionFilter.periodValue" [options]="[
+                                         {label: '1', value: 1},
+                                         {label: '2', value: 2},
+                                         {label: '3', value: 3},
+                                         {label: '5', value: 5},
+                                         {label: '10', value: 10}
+                                       ]" *ngIf="projectionFilter.isYear" placeholder="Anos"
+                                (onChange)="onProjectionFilterChange()">
+                            </p-dropdown>
+                            <p-selectButton [(ngModel)]="projectionFilter.isYear" [options]="[
+                                             {label: 'Meses', value: false},
+                                             {label: 'Anos', value: true}
+                                           ]" (onChange)="onProjectionFilterChange()">
+                            </p-selectButton>
+                        </div>
+                    </div>
+                    <p-chart type="line" [data]="projectionChartData" [options]="projectionChartOptions"></p-chart>
+                </div>
+            </div>
+
+            <!-- Análises Adicionais -->
+            <div class="analysis-section">
+                <!-- Gastos Inesperados -->
+                <div class="analysis-card" *ngIf="unexpectedExpenses">
+                    <h3>Análise de Gastos Inesperados</h3>
+                    <div class="analysis-content">
+                        <div class="analysis-item">
+                            <span class="label">Total de Gastos Inesperados:</span>
+                            <span class="value">{{ formatCurrency(unexpectedExpenses.totalUnexpectedExpenses) }}</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="label">Total de Lucros:</span>
+                            <span class="value">{{ formatCurrency(unexpectedExpenses.totalProfits) }}</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="label">Percentual dos Gastos:</span>
+                            <span class="value">{{ unexpectedExpenses.percentage }}</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="label">Nível de Alerta:</span>
+                            <span class="alert-badge"
+                                [style.backgroundColor]="getAlertLevelColor(unexpectedExpenses.alertLevel)">
+                                {{ unexpectedExpenses.alertLevel }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Metas Alcançadas -->
+                <div class="analysis-card">
+                    <h3>Metas Mais Alcançadas</h3>
+
+                    <div class="top-goals-list" *ngIf="paginatedGoals.length > 0; else noTopGoals">
+                        <div class="goal-item" *ngFor="let goal of paginatedGoals; let i = index">
+                            <div class="goal-rank">{{ (currentPage - 1) * itemsPerPage + i + 1 }}º</div>
+                            <div class="goal-details">
+                                <h4>Meta #{{ goal.goalNumber }}</h4>
+                                <p>{{ goal.description }}</p>
+                                <div class="goal-stats">
+                                    <span class="value">{{ formatCurrency(goal.value) }}</span>
+                                    <span class="achievements">Concluída {{ goal.achievementsCount }}x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controles de Paginação -->
+                        <div class="pagination-controls" *ngIf="totalPages > 1">
+                            <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">←</button>
+                            <span class="page-info">Página {{ currentPage }} / {{ totalPages }}</span>
+                            <button class="page-btn" (click)="nextPage()"
+                                [disabled]="currentPage === totalPages">→</button>
+                        </div>
+                    </div>
+
+                    <ng-template #noTopGoals>
+                        <p class="no-data">Nenhuma meta recorrente foi alcançada ainda.</p>
+                    </ng-template>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
