@@ -22,6 +22,10 @@
 
         <!-- Menu de ícones -->
         <div class="menu-icons">
+            <div class="menu-item-wrapper" routerLink="/dashboard">
+                <img src="assets/dashIcon.png" alt="Dashboard" class="menu-icon" />
+                <span class="menu-text">Dashboard</span>
+            </div>
             <div class="menu-item-wrapper" (click)="navigateToGoals()">
                 <img src="assets/goalsIcon.png" alt="Metas" class="menu-icon" />
                 <span class="menu-text">Metas</span>
@@ -133,7 +137,8 @@
     <div class="modal-backdrop" *ngIf="showCreateModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">{{ isPlannedTransaction ? 'Nova Transação Planejada' : 'Nova Transação Inesperada'
+                <h2 class="modal-title">{{ isPlannedTransaction ? 'Nova Transação Planejada' : 'Nova Transação
+                    Inesperada'
                     }}</h2>
             </div>
             <button class="modal-close" (click)="closeCreateModal()">×</button>

@@ -155,23 +155,7 @@ export class EnvironmentsComponent implements OnInit {
           return;
         }
 
-        // Chama a atualização das metas alcançadas antes de navegar
-        this.environmentService.updateAchievedGoals().subscribe({
-          next: () => {
-            setTimeout(() => {
-              this.router.navigate(['/goals']);
-            }, 400);
-          },
-          error: (err) => {
-            console.error('Aviso: Falha ao atualizar metas alcançadas, continuando...', err);
-            setTimeout(() => {
-              this.router.navigate(['/goals']);
-            }, 400);
-          },
-          complete: () => {
-            this.isLoading = false;
-          }
-        });
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.isLoading = false;
@@ -179,7 +163,7 @@ export class EnvironmentsComponent implements OnInit {
         this.showError(err, 'Erro ao definir ambiente ativo. Tente novamente.');
       },
       complete: () => {
-        // O loading é encerrado dentro do subscribe aninhado de updateAchievedGoals
+        this.isLoading = false;
       }
     });
   }
