@@ -3,7 +3,7 @@ import { TransactionsComponent } from './transactions.component';
 import { TransactionsService } from 'src/app/services/transactions/transactions.service';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import {
   TransactionDataDto,
   TransactionDataForViewDto,
