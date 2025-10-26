@@ -3,7 +3,7 @@ import { EnvironmentsComponent } from './environments.component';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment-data';
+import { EnvironmentData, EnvironmentTypeEnum } from '../../models/environment.model';
 import { FormsModule } from '@angular/forms';
 
 describe('EnvironmentsComponent', () => {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserDataDto } from 'src/app/models/user-data';
+import { UserDataDto } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
