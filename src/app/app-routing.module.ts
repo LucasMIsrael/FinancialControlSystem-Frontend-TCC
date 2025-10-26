@@ -8,6 +8,7 @@ import { UserComponent } from './pages/user/user.component';
 import { GoalsComponent } from './pages/goals/goals.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { RankingComponent } from './pages/ranking/ranking.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'goals', component: GoalsComponent },
   { path: 'transactions', component: TransactionsComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'ranking', component: RankingComponent }
 ];
 
 @NgModule({

@@ -370,8 +370,7 @@ export class TransactionsComponent implements OnInit {
   }
 
   private showError(err: any, defaultMessage: string): void {
-    const errorMessage = err?.error?.message || defaultMessage;
-    this.backendError = errorMessage;
+    this.backendError = err?.error || defaultMessage;
     setTimeout(() => {
       this.backendError = '';
     }, 5000);

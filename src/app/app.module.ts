@@ -22,6 +22,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RankingComponent } from './pages/ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     UserComponent,
     GoalsComponent,
     TransactionsComponent,
-    DashboardComponent
+    DashboardComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,
