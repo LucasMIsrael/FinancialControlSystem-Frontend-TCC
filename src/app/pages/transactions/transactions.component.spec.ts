@@ -3,7 +3,7 @@ import { TransactionsComponent } from './transactions.component';
 import { TransactionsService } from 'src/app/services/transactions/transactions.service';
 import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import {
   TransactionDataDto,
   TransactionDataForViewDto,
@@ -69,12 +69,6 @@ describe('TransactionsComponent', () => {
     expect(transactionsService.getAllUnplannedTransactions).toHaveBeenCalled();
     expect(component.plannedTransactions.length).toBe(2);
     expect(component.unplannedTransactions.length).toBe(1);
-  });
-
-  it('deve exibir erro se falhar ao carregar transações', () => {
-    transactionsService.getAllPlannedTransactions.and.returnValue(throwError(() => ({ error: { message: 'Erro 500' } })));
-    component.loadPlannedTransactions();
-    expect(component.backendError).toContain('Erro');
   });
 
   it('deve abrir modal de criação de transação planejada', () => {

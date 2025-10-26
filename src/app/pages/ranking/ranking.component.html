@@ -1,0 +1,85 @@
+<div class="ranking-container">
+    <div *ngIf="backendError" class="message-box error-message">
+        {{ backendError }}
+        <button class="close-btn" (click)="closeError()">×</button>
+    </div>
+
+    <div class="sidebar" [class.expanded]="sidebarOpen">
+        <div class="logo-section" (click)="toggleSidebar()">
+            <div class="logo-wrapper">
+                <img src="assets/finVisionIcon.png" alt="FinVision" class="logo" />
+                <span class="logo-text">FinVision</span>
+            </div>
+            <span class="expand-icon">{{ sidebarOpen ? '<<' : '>>' }}</span>
+        </div>
+
+        <div class="menu-icons">
+            <div class="menu-item-wrapper" routerLink="/dashboard">
+                <img src="assets/dashIcon.png" alt="Dashboard" class="menu-icon" />
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item-wrapper" routerLink="/goals">
+                <img src="assets/goalsIcon.png" alt="Metas" class="menu-icon" />
+                <span class="menu-text">Metas</span>
+            </div>
+            <div class="menu-item-wrapper" routerLink="/transactions">
+                <img src="assets/moneyIcon.png" alt="Transações" class="menu-icon" />
+                <span class="menu-text">Transações</span>
+            </div>
+            <div class="menu-item-wrapper active">
+                <img src="assets/rankIcon.png" alt="Ranking" class="menu-icon" />
+                <span class="menu-text">Ranking</span>
+            </div>
+        </div>
+
+        <div class="logout-wrapper" (click)="logout()">
+            <img src="assets/logoutIcon.png" alt="Sair do Ambiente" class="menu-icon" />
+            <span class="menu-text">Voltar</span>
+        </div>
+    </div>
+
+    <div class="content" [class.sidebar-open]="sidebarOpen">
+        <div class="header">
+            <h1>Ranking</h1>
+        </div>
+
+        <div class="ranking-list-container">
+            <div *ngIf="rankingList.length === 0" class="no-ranking">
+                <p>Não há dados de ranking disponíveis.</p>
+            </div>
+
+            <div *ngIf="rankingList.length > 0" class="ranking-table-wrapper">
+                <div class="ranking-header-row">
+                    <span class="rank-col">Posição</span>
+                    <span class="name-col">Usuário criador do ambiente</span>
+                    <span class="goals-col">Metas Concluídas</span>
+                    <span class="level-col">Nível</span>
+                    <span class="date-col">Criado em</span>
+                </div>
+
+                <div class="ranking-row" *ngFor="let item of rankingList; let i = index" [class.first-place]="i === 0"
+                    [class.second-place]="i === 1" [class.third-place]="i === 2">
+
+                    <span class="rank-col rank-number">
+                        <ng-container *ngIf="i === 0">🥇</ng-container>
+                        <ng-container *ngIf="i === 1">🥈</ng-container>
+                        <ng-container *ngIf="i === 2">🥉</ng-container>
+                        <ng-container *ngIf="i > 2">#{{ i + 1 }}</ng-container>
+                    </span>
+
+                    <span class="name-col" [attr.data-level]="item.environmentLevel"
+                        [attr.data-date]="formatDate(item.creationTime)">
+                        {{ item.userName }}
+                    </span>
+
+                    <span class="goals-col">{{ item.totalGoalsAchieved }}</span>
+                    <span class="level-col level-badge"
+                        [ngStyle]="{ 'background-color': getLevelColor(item.environmentLevel) }">
+                        {{ item.environmentLevel }}
+                    </span>
+                    <span class="date-col">{{ formatDate(item.creationTime) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

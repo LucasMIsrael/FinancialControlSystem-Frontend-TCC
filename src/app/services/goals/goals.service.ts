@@ -28,7 +28,7 @@ export class GoalsService {
     return this.http.delete<void>(`${this.apiUrl}goalsManipulation/delete/goal?id=${id}`);
   }
 
-  // updateAchievedGoals(id: string): Observable<void> {
-  //   return this.http.get<void>(`${this.apiUrl}goalsManipulation/update/achieved/goals`);
-  // }
+  updateAchievedGoals(): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}goalsManipulation/update/achieved/goals`, null);
+  }
 }

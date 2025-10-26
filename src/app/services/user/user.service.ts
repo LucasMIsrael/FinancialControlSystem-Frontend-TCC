@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserInfoForViewDto } from 'src/app/models/user-info-for-view';
-import { UserDataForUpdateDto } from 'src/app/models/user-info-for-update';
+import { UserInfoForViewDto, UserDataForUpdateDto } from 'src/app/models/user.model';
 
 @Injectable({
   providedIn: 'root'

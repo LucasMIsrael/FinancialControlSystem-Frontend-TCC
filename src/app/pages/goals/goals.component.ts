@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { GoalDataForViewDto, GoalDataDto, GoalPeriodTypeEnum } from 'src/app/models/goal.model';
-import { EnvironmentService } from 'src/app/services/environment/environment.service';
 import { GoalsService } from 'src/app/services/goals/goals.service';
 
 @Component({
@@ -42,7 +41,6 @@ export class GoalsComponent implements OnInit {
   private goalsService: GoalsService;
 
   constructor(
-    private environmentService: EnvironmentService,
     private router: Router,
     private http: HttpClient
   ) {
@@ -62,23 +60,25 @@ export class GoalsComponent implements OnInit {
   }
 
   loadGoals(): void {
-    const env = sessionStorage.getItem('env')
-
-    if (env)
-      this.environmentService.setEnvironment(env)
-
-    this.goalsService.getAllGoals().subscribe({
-      next: (data) => {
-        const goals = (data || []).map(goal => ({
-          ...goal,
-          id: goal.id || ''
-        }));
-
-        this.separateAndSortGoals(goals);
+    this.goalsService.updateAchievedGoals().subscribe({
+      next: () => {
+        this.goalsService.getAllGoals().subscribe({
+          next: (data) => {
+            const goals = (data || []).map(goal => ({
+              ...goal,
+              id: goal.id || ''
+            }));
+            this.separateAndSortGoals(goals);
+          },
+          error: (err) => {
+            console.error('Erro ao buscar metas', err);
+            this.showError(err, 'Erro ao carregar lista de metas');
+          }
+        });
       },
       error: (err) => {
-        console.error('Erro ao buscar metas', err);
-        this.showError(err, 'Erro ao carregar lista de metas.');
+        console.error('Erro ao atualizar metas', err);
+        this.showError(err, 'Erro ao atualizar metas antes de carregar a lista');
       }
     });
   }
@@ -351,8 +351,7 @@ export class GoalsComponent implements OnInit {
   }
 
   private showError(err: any, defaultMessage: string): void {
-    const errorMessage = err?.error?.message || defaultMessage;
-    this.backendError = errorMessage;
+    this.backendError = err?.error || defaultMessage;
     setTimeout(() => {
       this.backendError = '';
     }, 5000);
