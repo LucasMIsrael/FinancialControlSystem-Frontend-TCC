@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserComponent } from './user.component';
 import { UserService } from 'src/app/services/user/user.service';
-import { UserInfoForViewDto } from 'src/app/models/user-info-for-view';
-import { UserDataForUpdateDto } from 'src/app/models/user-info-for-update';
+import { UserInfoForViewDto, UserDataForUpdateDto } from 'src/app/models/user.model';
 
 describe('UserComponent', () => {
   let component: UserComponent;

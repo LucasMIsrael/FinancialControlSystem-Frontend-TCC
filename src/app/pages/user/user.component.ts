@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserDataForUpdateDto } from 'src/app/models/user-info-for-update';
-import { UserInfoForViewDto } from 'src/app/models/user-info-for-view';
-import { UserService } from 'src/app/services/user/user.service'; // Assumindo o caminho
+import { UserInfoForViewDto, UserDataForUpdateDto } from 'src/app/models/user.model';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-user',
