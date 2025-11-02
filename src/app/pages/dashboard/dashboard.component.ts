@@ -65,6 +65,9 @@ export class DashboardComponent implements OnInit {
   successMessage = '';
   loading = false;
 
+  aiLoading = false;
+  geminiResponse = 'Clique em "Analisar com IA" para gerar um diagnóstico financeiro e dicas de melhoria com base nos seus dados atuais.';
+
   constructor(
     private dashboardService: DashboardService,
     private router: Router,
@@ -283,6 +286,62 @@ export class DashboardComponent implements OnInit {
       error: (err) => {
         this.showError(err, 'Erro ao carregar projeção de saldo');
         this.loading = false;
+      }
+    });
+  }
+
+  analyzeDashboardWithAI(): void {
+    if (!this.financialSummary || !this.goalsSummary || !this.unexpectedExpenses) {
+      this.showError(null, 'Aguarde o carregamento completo dos dados antes de analisar.');
+      return;
+    }
+
+    this.aiLoading = true;
+    this.geminiResponse = 'Analisando dados... Por favor, aguarde.';
+
+    const summary = this.financialSummary;
+    const goals = this.goalsSummary;
+    const expenses = this.unexpectedExpenses;
+
+    // Montagem do prompt com dados estruturados
+    const prompt = `
+            Analise o seguinte resumo de controle financeiro e forneça um diagnóstico detalhado, pontos fortes, fraquezas e dicas práticas. O tom deve ser profissional e encorajador, comece a resposta diretamente na analise que se pede abaixo, inciando com o título ## Diagnóstico Detalhado do Controle Financeiro  .
+
+            --- DADOS FINANCEIROS DO AMBIENTE ---
+            1. Resumo Financeiro:
+               - Saldo Atual: ${this.formatCurrency(summary.currentBalance)}
+               - Receitas Totais: ${this.formatCurrency(summary.totalProfit)}
+               - Despesas Totais: ${this.formatCurrency(summary.totalExpense)}
+               - Margem de Lucro: ${summary.profitMargin}
+
+            2. Metas (Pontuais):
+               - Metas Concluídas: ${goals.completed}
+               - Metas Pendentes: ${goals.pending}
+
+            3. Metas Recorrentes Mais Alcançadas (Top 3):
+            ${this.topGoals.slice(0, 3).map((g, i) =>
+      `    ${i + 1}º: Meta #${g.goalNumber} (R$ ${g.value.toFixed(2)}) alcançada ${g.achievementsCount} vezes. Descrição: ${g.description}.`
+    ).join('\n')}
+
+            4. Gastos Não Planejados (Inesperados):
+               - Total Inesperado: ${this.formatCurrency(expenses.totalUnexpectedExpenses)}
+               - Percentual em Relação ao Lucro: ${expenses.percentage}
+               - Nível de Alerta: ${expenses.alertLevel}
+
+            --- ANÁLISE SOLICITADA ---
+            Com base nos dados acima, comece com um resumo da situação atual e o nível de controle. Em seguida, analise a margem de lucro e os gastos inesperados. Finalmente, ofereça 3 a 5 sugestões práticas para melhorar o controle financeiro, metas e a saúde geral do orçamento. Não faça tabelas, caso necessário, utilize tópicos e subtópicos.
+        `;
+
+    this.dashboardService.communicateWithAI(prompt).subscribe({
+      next: (response) => {
+        this.geminiResponse = response;
+        this.aiLoading = false;
+      },
+      error: (err) => {
+        console.error('Erro ao comunicar com a IA:', err);
+        this.geminiResponse = 'Desculpe, houve um erro ao comunicar com o servidor de análise da IA.';
+        this.showError(err, 'Erro ao gerar análise da IA.');
+        this.aiLoading = false;
       }
     });
   }
