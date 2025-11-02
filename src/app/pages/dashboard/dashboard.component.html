@@ -264,7 +264,27 @@
                         <p class="no-data">Nenhuma meta recorrente foi alcançada ainda.</p>
                     </ng-template>
                 </div>
+            </div>
 
+            <!-- NOVO: Seção de Análise de IA -->
+            <div class="ai-analysis-section">
+                <div class="analysis-card ai-card">
+                    <div class="ai-header">
+                        <h3>Análise dos dados com Inteligência Artificial (Powered by Gemini)</h3>
+                        <button class="ai-analyze-btn" (click)="analyzeDashboardWithAI()"
+                            [disabled]="aiLoading || loading || !financialSummary">
+                            <i class="pi pi-sparkles" [class.pi-spin]="aiLoading"></i>
+                            {{ aiLoading ? 'Analisando...' : 'Analisar com IA' }}
+                        </button>
+                    </div>
+
+                    <div class="ai-response-box">
+                        <textarea class="ai-response-text" [value]="geminiResponse" readonly
+                            [class.loading-text]="aiLoading"
+                            placeholder="Clique em 'Analisar com IA' para gerar um diagnóstico.">
+                        </textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
