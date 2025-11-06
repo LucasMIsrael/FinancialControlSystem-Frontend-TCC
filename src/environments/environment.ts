@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'finvision-backend-apfad4e4cggpguar.brazilsouth-01.azurewebsites.net/api/'
+    apiUrl: 'https://finvision-backend-apfad4e4cggpguar.brazilsouth-01.azurewebsites.net/api/'
 };
