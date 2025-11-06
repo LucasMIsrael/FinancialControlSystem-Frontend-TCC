@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:5243/api/'
+    apiUrl: 'finvision-backend-apfad4e4cggpguar.brazilsouth-01.azurewebsites.net/api/'
 };
