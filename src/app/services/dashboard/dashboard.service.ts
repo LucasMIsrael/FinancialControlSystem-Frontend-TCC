@@ -59,7 +59,10 @@ export class DashboardService {
   }
 
   communicateWithAI(prompt: string): Observable<string> {
-    const params = new HttpParams().set('prompt', prompt);
-    return this.http.get<string>(`${this.apiUrl}dashboard/ai/communicate`, { params, responseType: 'text' as 'json' });
+    return this.http.post<string>(
+      `${this.apiUrl}dashboard/ai/communicate`,
+      { prompt },
+      { responseType: 'text' as 'json' }
+    );
   }
 }
