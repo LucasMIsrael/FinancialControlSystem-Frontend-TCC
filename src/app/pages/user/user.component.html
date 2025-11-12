@@ -33,8 +33,10 @@
         </div>
     </div>
 
-    <div class="content" [class.sidebar-open]="sidebarOpen">
+    <div class="content" [class.sidebar-open]="sidebarOpen" (click)="closeSidebarOnMobile($event)">
         <div class="header">
+            <button class="mobile-menu-btn" (click)="toggleSidebar()">☰</button>
+
             <h1>Meu Perfil</h1>
         </div>
 
