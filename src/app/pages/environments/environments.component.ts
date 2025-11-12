@@ -251,4 +251,20 @@ export class EnvironmentsComponent implements OnInit {
   closeError(): void {
     this.backendError = '';
   }
+
+  closeSidebarOnMobile(event: Event) {
+    if (this.isMobile() && this.sidebarOpen) {
+      const target = event.target as HTMLElement;
+
+      const isMenuItem = target.closest('.menu-item-wrapper') || target.closest('.logout-wrapper');
+
+      if (this.sidebarOpen && isMenuItem) {
+        this.sidebarOpen = false;
+      }
+    }
+  }
+
+  isMobile(): boolean {
+    return window.innerWidth <= 768;
+  }
 }
