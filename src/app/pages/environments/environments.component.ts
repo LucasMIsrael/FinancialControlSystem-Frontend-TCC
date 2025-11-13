@@ -267,4 +267,17 @@ export class EnvironmentsComponent implements OnInit {
   isMobile(): boolean {
     return window.innerWidth <= 768;
   }
+
+  getEnvironmentTypeName(type: EnvironmentTypeEnum): string {
+    switch (type) {
+      case EnvironmentTypeEnum.Personal:
+        return 'Pessoal';
+      case EnvironmentTypeEnum.Family:
+        return 'Familiar';
+      case EnvironmentTypeEnum.Business:
+        return 'Empresarial';
+      default:
+        return 'Desconhecido';
+    }
+  }
 }
