@@ -16,12 +16,13 @@
     left: 0;
     z-index: 1000;
     transition: width 0.3s ease;
-    overflow: visible;
+    overflow: hidden;
 }
 
 /* expandida */
 .sidebar.expanded {
     width: 200px;
+    overflow: visible;
 }
 
 /* logo principal */
@@ -237,8 +238,9 @@
 
 .goal-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     background: white;
     padding: 20px;
     border-radius: 12px;
@@ -255,7 +257,8 @@
 
 .goal-info {
     flex-grow: 1;
-    padding-right: 20px;
+    width: 100%;
+    padding-right: 0;
 }
 
 .goal-info h2 {
@@ -293,7 +296,9 @@
 }
 
 .goal-actions {
-    position: relative;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     flex-shrink: 0;
 }
 
@@ -599,49 +604,6 @@
     }
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .content {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-        padding: 20px;
-    }
-
-    .content.sidebar-open {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-    }
-
-    .goals-list-container {
-        max-width: 100%;
-    }
-
-    .goal-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .goal-actions {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-    }
-
-    .modal {
-        width: 100%;
-    }
-
-    .modal-body {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .modal .form-column {
-        width: 100%;
-    }
-}
-
 .goals-section {
     margin-bottom: 40px;
     border: 1px solid #e0e0e0;
@@ -690,21 +652,18 @@
     background: #a1a1a1;
 }
 
-/* Cards compactos */
 .goal-item.compact {
     padding: 15px;
     min-height: auto;
     max-width: none;
 }
 
-/* Correção 1: Header da meta com título fixo */
 .goal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     min-height: 24px;
-    /* Altura mínima para manter consistência */
 }
 
 .goal-header h3 {
@@ -713,9 +672,7 @@
     color: #2b2b2b;
     margin: 0;
     white-space: nowrap;
-    /* Impede quebra de linha */
     flex-shrink: 0;
-    /* Impede que o título seja comprimido */
 }
 
 .goal-info .description {
@@ -724,7 +681,6 @@
     margin-bottom: 10px;
     line-height: 1.4;
     word-wrap: break-word;
-    /* Permite quebra de palavras longas */
     overflow-wrap: break-word;
 }
 
@@ -751,7 +707,6 @@
     color: #555;
 }
 
-/* Badge de Status */
 .status-badge {
     display: inline-block;
     padding: 4px 12px;
@@ -791,5 +746,153 @@
     .status-badge {
         font-size: 10px;
         padding: 3px 10px;
+    }
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #2b2b2b;
+    padding: 0;
+    line-height: 1;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 75%;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        position: fixed;
+        height: 100%;
+        z-index: 1500;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.expanded {
+        transform: translateX(0);
+    }
+
+    .content {
+        padding: 25px 15px 15px 15px;
+        margin-left: 0;
+        width: 100%;
+        max-height: initial;
+        margin-top: 0;
+    }
+
+    .content.sidebar-open {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .content.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1499;
+        opacity: 1;
+        pointer-events: auto;
+        animation: none;
+    }
+
+    .header {
+        display: grid;
+        grid-template-areas: "menu title new-btn";
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        grid-area: menu;
+        margin-right: 15px;
+    }
+
+    .header h1 {
+        font-size: 30px;
+        margin: 0;
+        grid-area: title;
+    }
+
+    .new-goal-btn {
+        grid-area: new-btn;
+        font-size: 13px;
+        padding: 8px 12px;
+        margin-right: 0;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .goals-list-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .goal-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .goal-info {
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .goal-info h2 {
+        font-size: 18px;
+    }
+
+    .goal-info .description {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .target-value-display {
+        width: 100%;
+        text-align: left;
+        margin-top: 5px;
+    }
+
+    .goal-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .options-btn {
+        font-size: 20px;
+    }
+
+    .modal {
+        width: 95%;
+    }
+
+    .delete-modal {
+        width: 95%;
+    }
+
+    .goals-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+
+    .goal-item.compact {
+        max-width: 100%;
     }
 }

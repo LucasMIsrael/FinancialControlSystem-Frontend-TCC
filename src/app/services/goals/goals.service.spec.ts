@@ -26,7 +26,7 @@ describe('GoalsService', () => {
         const mockGoal: GoalDataDto = { description: 'Nova Meta', value: 150 };
 
         service.createGoal(mockGoal).subscribe((response) => {
-            expect(response == null).toBeTrue(); // ✅ aceita null ou undefined
+            expect(response == null).toBeTrue();
         });
 
         const req = httpMock.expectOne(`${apiUrl}goalsManipulation/create/goal`);
@@ -39,7 +39,7 @@ describe('GoalsService', () => {
         const updatedGoal: GoalDataDto = { id: '1', description: 'Meta Atualizada', value: 300 };
 
         service.updateGoal(updatedGoal).subscribe((response) => {
-            expect(response == null).toBeTrue(); // ✅ aceita null ou undefined
+            expect(response == null).toBeTrue();
         });
 
         const req = httpMock.expectOne(`${apiUrl}goalsManipulation/update/goal`);
@@ -52,7 +52,7 @@ describe('GoalsService', () => {
         const goalId = '1';
 
         service.deleteGoal(goalId).subscribe((response) => {
-            expect(response == null).toBeTrue(); // ✅ aceita null ou undefined
+            expect(response == null).toBeTrue();
         });
 
         const req = httpMock.expectOne(`${apiUrl}goalsManipulation/delete/goal?id=${goalId}`);

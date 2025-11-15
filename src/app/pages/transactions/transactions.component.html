@@ -42,21 +42,28 @@
 
         <!-- Logout -->
         <div class="logout-wrapper" (click)="logout()">
-            <img src="assets/logoutIcon.png" alt="Sair do Ambiente" class="menu-icon" />
+            <img src="assets/logoutIcon.png" alt="Sair" class="menu-icon" />
             <span class="menu-text">Voltar</span>
         </div>
     </div>
 
+    <!-- OVERLAY (somente mobile) -->
+    <div class="sidebar-overlay" *ngIf="sidebarOpen" (click)="toggleSidebar()">
+    </div>
+
     <!-- Conteúdo Principal: Lista de Transações -->
-    <div class="content" [class.sidebar-open]="sidebarOpen">
+    <div class="content" [class.sidebar-open]="sidebarOpen" (click)="closeSidebarOnMobile($event)">
+
         <div class="header">
+            <button class="mobile-menu-btn" (click)="toggleSidebar()">☰</button>
             <h1>Minhas Transações</h1>
+
             <div class="header-buttons">
                 <button class="new-transaction-btn planned" (click)="newTransaction('planned')">
-                    + Transação Planejada
+                    + Planejada
                 </button>
                 <button class="new-transaction-btn unplanned" (click)="newTransaction('unplanned')">
-                    + Transação Inesperada
+                    + Inesperada
                 </button>
             </div>
         </div>
@@ -141,9 +148,9 @@
     <div class="modal-backdrop" *ngIf="showCreateModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">{{ isPlannedTransaction ? 'Nova Transação Planejada' : 'Nova Transação
-                    Inesperada'
-                    }}</h2>
+                <h2 class="modal-title">
+                    {{ isPlannedTransaction ? 'Nova Transação Planejada' : 'Nova Transação Inesperada' }}
+                </h2>
             </div>
             <button class="modal-close" (click)="closeCreateModal()">×</button>
 
@@ -256,7 +263,7 @@
         </div>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
+    <!-- Modal de Exclusão -->
     <div class="delete-modal-backdrop" *ngIf="showDeleteModal">
         <div class="delete-modal">
             <div class="modal-header">
@@ -265,9 +272,8 @@
             <button class="modal-close" (click)="cancelDelete()">×</button>
 
             <div class="modal-body">
-                Tem certeza que deseja excluir a transação <strong>#{{ transactionToDelete?.transactionNumber
-                    }}</strong>? Esta ação é
-                permanente.
+                Tem certeza que deseja excluir a transação
+                <strong>#{{ transactionToDelete?.transactionNumber }}</strong>?
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" (click)="cancelDelete()">Não</button>

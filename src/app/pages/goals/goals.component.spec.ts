@@ -13,13 +13,9 @@ const mockGoalModel = {
 };
 
 const mockGoals: GoalDataForViewDto[] = [
-    // Meta Pontual (Não Recorrente) - Vencimento Amanhã
     { id: '1', goalNumber: 1, description: 'Viagem', value: 5000, status: false, periodType: GoalPeriodTypeEnum.None, startDate: null, singleDate: '2025-10-13' },
-    // Meta Pontual (Não Recorrente) - Vencimento Hoje
     { id: '3', goalNumber: 3, description: 'Compra de algo', value: 100, status: null, periodType: GoalPeriodTypeEnum.None, startDate: null, singleDate: '2025-10-12' },
-    // Meta Recorrente - Mensal
     { id: '2', goalNumber: 2, description: 'Mensalidade', value: 500, status: false, periodType: GoalPeriodTypeEnum.Monthly, startDate: '2025-01-01', singleDate: null },
-    // Meta Recorrente - Anual
     { id: '4', goalNumber: 4, description: 'Aniversário', value: 1000, status: true, periodType: GoalPeriodTypeEnum.Annual, startDate: '2025-01-01', singleDate: null },
 ];
 
@@ -75,8 +71,6 @@ describe('GoalsComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    // --- Testes de UI e Modais ---
-
     it('deve abrir o modal de criação de meta', () => {
         component.newGoal();
         expect(component.showCreateModal).toBeTrue();
@@ -92,8 +86,6 @@ describe('GoalsComponent', () => {
         expect(component.showCreateModal).toBeFalse();
         expect(component.newGoalForm.description).toBe('');
     });
-
-    // --- Testes de Criação (saveGoal) ---
 
     it('não deve criar meta se a descrição estiver vazia', () => {
         component.newGoalForm.description = ' ';
@@ -163,12 +155,9 @@ describe('GoalsComponent', () => {
 
         expect(mockGoalsService.createGoal).toHaveBeenCalled();
         const sentPayload = mockGoalsService.createGoal.calls.mostRecent().args[0];
-        expect(sentPayload.startDate).toBeNull(); // Não deve enviar startDate
+        expect(sentPayload.startDate).toBeNull();
         expect(sentPayload.singleDate).toBe('2025-11-01');
     });
-
-
-    // --- Testes de Edição (onEdit/saveEdit) ---
 
     it('deve carregar dados da meta e formatar datas no onEdit', () => {
         const goalToEdit: GoalDataForViewDto = {
@@ -178,7 +167,6 @@ describe('GoalsComponent', () => {
 
         expect(component.showEditModal).toBeTrue();
         expect(component.envToEdit.description).toBe('Teste data');
-        // Verifica se as datas foram formatadas corretamente
         expect(component.envToEdit.startDate).toBe('2025-01-01');
         expect(component.envToEdit.singleDate).toBe('2025-12-31');
     });
@@ -210,8 +198,6 @@ describe('GoalsComponent', () => {
         expect(component.loadGoals).toHaveBeenCalled();
     });
 
-    // --- Testes de Exclusão (onDelete) ---
-
     it('deve abrir o modal de exclusão', () => {
         component.onDelete(mockGoals[0]);
         expect(component.showDeleteModal).toBeTrue();
@@ -241,8 +227,6 @@ describe('GoalsComponent', () => {
         expect(component.loadGoals).toHaveBeenCalled();
     });
 
-    // --- Testes de Utilidade ---
-
     it('deve formatar valores para moeda BRL', () => {
         expect(component.formatCurrency(1234.56)).toMatch(/R\$\s1\.234,56/);
         expect(component.formatCurrency(0)).toMatch(/R\$\s0,00/);
@@ -261,8 +245,6 @@ describe('GoalsComponent', () => {
         expect(component.getStatusText(null)).toBe('Pendente');
         expect(component.getStatusText(undefined)).toBe('Pendente');
     });
-
-    // --- Testes de Navegação/Sidebar ---
 
     it('deve alternar a sidebar', () => {
         expect(component.sidebarOpen).toBeFalse();

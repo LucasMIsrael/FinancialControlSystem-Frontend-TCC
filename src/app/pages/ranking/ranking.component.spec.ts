@@ -40,7 +40,6 @@ describe('RankingComponent', () => {
         mockRouter.navigate.calls.reset();
     });
 
-    // --- Teste 1: Criação e Inicialização ---
     it('deve criar e chamar loadRanking na inicialização', () => {
         spyOn(component, 'loadRanking');
 
@@ -50,7 +49,6 @@ describe('RankingComponent', () => {
         expect(component.loadRanking).toHaveBeenCalled();
     });
 
-    // --- Teste 2: Carregamento de Ranking com Sucesso e Ordenação ---
     it('deve carregar a lista de classificação, classificá-la por TotalGoalsAchieved em ordem decrescente', waitForAsync(() => {
         spyOn(rankingService, 'getRanking').and.returnValue(of(mockRankingList));
 
@@ -63,7 +61,6 @@ describe('RankingComponent', () => {
         expect(component.rankingList[0].totalGoalsAchieved).toBe(15);
     }));
 
-    // --- Teste 3: Carregamento de Ranking com Erro ---
     it('deve definir backendError em caso de falha de loadRanking', () => {
         const errorResponse = { error: 'Failed to fetch data' };
         spyOn(rankingService, 'getRanking').and.returnValue(throwError(() => errorResponse));
@@ -75,7 +72,6 @@ describe('RankingComponent', () => {
         expect((component as any).showError).toHaveBeenCalledWith(errorResponse, 'Erro ao carregar o ranking');
     });
 
-    // --- Teste 4: Função de Logout ---
     it('deve limpar a sessão e navegar no logout', () => {
         spyOn(sessionStorage, 'removeItem');
 
@@ -85,7 +81,6 @@ describe('RankingComponent', () => {
         expect(mockRouter.navigate).toHaveBeenCalledWith(['/environments']);
     });
 
-    // --- Teste 5: Função de getLevelColor (Utilidade) ---
     it('deve retornar a cor correta para níveis ambientais específicos', () => {
         expect(component.getLevelColor('Iniciante')).toBe('#E74C3C');
         expect(component.getLevelColor('Avançado')).toBe('#2ECC71');

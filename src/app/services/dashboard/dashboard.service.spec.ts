@@ -147,7 +147,7 @@ describe('DashboardService', () => {
 
     it('deve atualizar saldo do ambiente', () => {
         service.updateEnvironmentBalance().subscribe(res => {
-            expect(res).toBeNull(); // <-- alterado
+            expect(res).toBeNull();
         });
 
         const req = httpMock.expectOne(`${apiUrl}transaction/update/totalBalance`);
@@ -160,7 +160,7 @@ describe('DashboardService', () => {
         const value = 2500;
 
         service.editTotalBalance(value).subscribe(res => {
-            expect(res).toBeNull(); // <-- alterado
+            expect(res).toBeNull();
         });
 
         const req = httpMock.expectOne(`${apiUrl}dashboard/edit/envBalance`);
