@@ -43,7 +43,6 @@ describe('UserComponent', () => {
   });
 
   afterEach(() => {
-    // Garante que o estado não vaze entre os testes
     TestBed.resetTestingModule();
   });
 
@@ -52,7 +51,6 @@ describe('UserComponent', () => {
   });
 
   it('deve carregar os dados do usuário no ngOnInit e preencher userEdit', () => {
-    // Recria o mock limpo e reinstancia o componente do zero
     userServiceMock.getUser.and.returnValue(of({
       id: '1',
       name: 'Usuário Teste',
@@ -62,7 +60,6 @@ describe('UserComponent', () => {
     fixture = TestBed.createComponent(UserComponent);
     component = fixture.componentInstance;
 
-    // Chama ngOnInit manualmente
     component.ngOnInit();
 
     expect(userServiceMock.getUser).toHaveBeenCalled();

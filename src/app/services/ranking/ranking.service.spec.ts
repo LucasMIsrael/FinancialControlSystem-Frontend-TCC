@@ -24,7 +24,7 @@ describe('RankingService', () => {
     });
 
     afterEach(() => {
-        httpMock.verify(); // Garante que não existam requisições pendentes
+        httpMock.verify();
     });
 
     it('deve ser criado corretamente', () => {
