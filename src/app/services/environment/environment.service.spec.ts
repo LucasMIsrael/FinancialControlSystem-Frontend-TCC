@@ -19,7 +19,7 @@ describe('EnvironmentService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // garante que não restaram requisições pendentes
+    httpMock.verify();
   });
 
   it('Deve ser criado', () => {

@@ -18,7 +18,7 @@ describe('AuthService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Verifica se não houve requisições pendentes
+    httpMock.verify();
   });
 
   it('deve ser criado', () => {

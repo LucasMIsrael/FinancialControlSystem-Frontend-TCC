@@ -53,6 +53,8 @@
                     {{ env.name }}
                 </div>
                 <div class="env-card-body">
+                    <strong>Tipo:</strong> {{ getEnvironmentTypeName(env.type) }}
+                    <br>
                     <strong>Descrição:</strong> {{ env.description }}
                 </div>
 

@@ -22,7 +22,7 @@ import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
 export class DashboardComponent implements OnInit {
   sidebarOpen = false;
 
-  // Data properties
+  //data properties
   financialSummary: FinancialSummaryDto | null = null;
   balanceOverTime: BalanceOverTimeDto[] = [];
   goalsSummary: GoalsSummaryDto | null = null;
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   isEditingBalance = false;
   editedBalance = 0;
 
-  // Chart data
+  //chart data
   balanceChartData: any;
   balanceChartOptions: any;
   goalsDonutData: any;
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
   projectionChartData: any;
   projectionChartOptions: any;
 
-  // Filters
+  //filters
   balanceFilter: FilterForBalanceOverTimeDto = {
     startDate: '',
     endDate: ''
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
   paginatedGoals: any[] = [];
   totalPages = 1;
 
-  // Messages
+  //messages
   backendError = '';
   successMessage = '';
   loading = false;
@@ -506,5 +506,21 @@ export class DashboardComponent implements OnInit {
   closeError(): void {
     this.backendError = '';
     this.successMessage = '';
+  }
+
+  closeSidebarOnMobile(event: Event) {
+    if (this.isMobile() && this.sidebarOpen) {
+      const target = event.target as HTMLElement;
+
+      const isMenuItem = target.closest('.menu-item-wrapper') || target.closest('.logout-wrapper');
+
+      if (this.sidebarOpen && isMenuItem) {
+        this.sidebarOpen = false;
+      }
+    }
+  }
+
+  isMobile(): boolean {
+    return window.innerWidth <= 768;
   }
 }
