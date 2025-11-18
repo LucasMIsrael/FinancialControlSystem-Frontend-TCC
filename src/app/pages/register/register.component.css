@@ -3,10 +3,14 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+
   background-color: #F7F7F7;
-  /* Light gray for the right side */
-  background-image: linear-gradient(to right, #98fb98 50%, #F7F7F7 50%);
-  /* Green on the left, gray on the right */
+  background-image:
+    linear-gradient(to right,
+      #2E8B57 0%,
+      #3CB371 10%,
+      #98FB98 50%,
+      #F7F7F7 50%);
 }
 
 .register-container {
