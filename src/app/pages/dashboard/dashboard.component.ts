@@ -303,7 +303,7 @@ export class DashboardComponent implements OnInit {
     const goals = this.goalsSummary;
     const expenses = this.unexpectedExpenses;
 
-    // Montagem do prompt com dados estruturados
+    //montagem do prompt com dados estruturados
     const prompt = `
             Analise o seguinte resumo de controle financeiro e forneça um diagnóstico detalhado, pontos fortes, fraquezas e dicas práticas. O tom deve ser profissional e encorajador, comece a resposta diretamente na analise que se pede abaixo, inciando com o título ## Diagnóstico Detalhado do Controle Financeiro  .
 

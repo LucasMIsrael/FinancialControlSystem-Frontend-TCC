@@ -1,7 +1,11 @@
 .goals-container {
     display: flex;
     height: 100vh;
-    background: #f9f9f9;
+    background: linear-gradient(to bottom right,
+            #2E8B57 0%,
+            #3CB371 25%,
+            #98FB98 50%,
+            #CFFFE1 100%);
     font-family: Arial, sans-serif;
     position: relative;
 }
@@ -197,7 +201,7 @@
 .header h1 {
     font-size: 45px;
     font-weight: 400;
-    color: #2b2b2b;
+    color: white;
     margin-top: 25px;
 }
 
