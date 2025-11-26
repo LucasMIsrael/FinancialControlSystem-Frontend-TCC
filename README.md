@@ -1,27 +1,91 @@
-# FinancialSystem
+<img width="1200" height="129" alt="finvisionlogo" src="https://github.com/user-attachments/assets/37df6d7d-7d1c-4c20-a045-3c2e52c5c26b" />
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+# FinancialControlSystem-Frontend-TCC
+> Interface web do Sistema de Controle Financeiro Multi-Tenancy – Desenvolvido por Lucas Mendes Israel
 
-## Development server
+[![Status do Projeto](https://img.shields.io/static/v1?label=STATUS&message=CONCLUÍDO&color=GREEN&style=for-the-badge)]()
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Aplicação: https://finvision-financialctrl.vercel.app/  
+### Backend: https://github.com/LucasMIsrael/FinancialControlSystem-Backend-TCC
 
-## Code scaffolding
+<br>
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🔎 Visão Geral  
+Este repositório contém o **frontend do FinVision**, desenvolvido em **Angular**, responsável pela interface web do sistema de controle financeiro multi-tenancy.  
+O sistema permite ao usuário visualizar, cadastrar e monitorar suas finanças de forma prática, com dashboards, metas, análise por IA e relatórios.
 
-## Build
+A plataforma foi desenvolvida como Trabalho de Conclusão de Curso (TCC/Portfólio) para o curso de Engenharia de Software na Universidade Católica de SC – Joinville.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+<br>
 
-## Running unit tests
+## 🎨 Tecnologias Utilizadas  
+- **Angular 16 + PrimeNG Charts**
+- **TypeScript**
+- **CSS / HTML5**
+- **Consumo de API REST**
+- **Karma para testes unitários**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<br>
 
-## Running end-to-end tests
+## 🛠️ Como rodar o projeto localmente  
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### ✔ Pré-requisitos:
+- Node.js LTS  
+- Angular CLI  
+- Backend em execução (local ou remoto)  
 
-## Further help
+```bash
+# 1. Clone o repositório
+git clone https://github.com/LucasMIsrael/FinancialControlSystem-Frontend-TCC.git
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# 2. Acesse o diretório
+cd FinancialControlSystem-Frontend-TCC
+
+# 3. Instale as dependências
+npm install
+
+# 4. Configure o arquivo de ambiente
+# Edite: src/environments/environment.ts
+# e coloque a URL da API (ex: http://localhost:5243)
+
+# 5. Execute o servidor de desenvolvimento
+ng serve
+
+# Aplicação disponível em:
+http://localhost:4200/
+```
+<br>
+
+## 🚀 Funcionalidades Principais
+- `Multi-Tenancy`: suporte a múltiplos tenants/ambientes com isolamento de dados;
+- `Autenticação`: autenticação e login integrado ao backend com JWT;
+- `Transações`: gerenciamento visual de transações planejadas e inesperadas;
+- `Metas`: cadastro e acompanhamento de metas financeiras;
+- `Dashboard`: dashboard com gráficos interativos;
+- `Ranking`: ranking dos 10 ambientes com maior desempenho;
+- `Análise de IA`: análise de finanças com apoio de Inteligência Artificial.
+
+<br>
+
+## 📁 Estrutura resumida do projeto
+```bash
+src/
+├── app/
+│   ├── models/            → interfaces/dtos e tipos
+│   ├── pages/             → páginas principais do sistema e seus componentes
+│   ├── services/          → comunicação com a API
+│   └── app.module.ts
+│
+├── assets/                → imagens e ícones
+└── environments/          → configuração de API (dev/prod)
+```
+
+<br>
+
+## 📦 Scripts disponíveis
+```bash
+ng serve          # inicia o servidor de desenvolvimento
+ng test           # executa os testes unitários (Karma)
+ng lint           # executa as análises de código via lint
+ng generate       # gera componentes/serviços/módulos automaticamente
+```
