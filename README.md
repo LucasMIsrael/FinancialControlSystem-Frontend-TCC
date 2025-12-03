@@ -7,6 +7,9 @@
 
 ### Aplicação: https://finvision-financialctrl.vercel.app/  
 ### Backend: https://github.com/LucasMIsrael/FinancialControlSystem-Backend-TCC
+### Demonstração em vídeo: 
+
+https://github.com/user-attachments/assets/668fafa8-b59e-43fe-973f-fb8c794641a7
 
 <br>
 
